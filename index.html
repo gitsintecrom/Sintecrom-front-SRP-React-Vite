@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdminLTE con React y Vite</title>
+  
+  <!-- Estilos (estos están correctos) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/2.7.0/styles/overlayscrollbars.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/css/adminlte.min.css" />
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed sidebar-dark-primary">
+  <div id="root"></div>
+
+  <!-- SCRIPTS DE LIBRERÍAS (en el orden correcto) -->
+  
+  <!-- 1. jQuery (Requerido por AdminLTE y Bootstrap 4) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <!-- 2. Bootstrap 4 (LA VERSIÓN CORRECTA) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
+
+  <!-- 3. OverlayScrollbars (Opcional pero recomendado por AdminLTE) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/2.7.0/js/jquery.overlayScrollbars.min.js"></script>
+
+  <!-- 4. AdminLTE -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script> -->
+
+  <!-- 5. El script de tu aplicación React al final de todo -->
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>

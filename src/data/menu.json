@@ -1,0 +1,158 @@
+[
+    {
+        "id": "usuarios",
+        "text": "Usuarios",
+        "icon": "fas fa-users",
+        "permiso": "ver_usuarios",
+        "children": [
+            {
+                "id": "listado",
+                "text": "Listado",
+                "icon": "far fa-circle",
+                "path": "/usuarios/listado",
+                "permiso": "ver_usuarios"
+            }
+        ]
+    },
+    {
+        "id": "abastecimiento",
+        "text": "Abastecimiento",
+        "icon": "fas fa-truck-loading",
+        "path": "/abastecimiento",
+        "permiso": "ver_otros"
+    },
+    {
+        "id": "programacion",
+        "text": "Programación",
+        "icon": "fas fa-bug",
+        "path": "/programacion",
+        "permiso": "ver_otros",
+        "children": [
+            {
+                "id": "hornos",
+                "text": "Resecuenciar Hornos",
+                "icon": "far fa-circle",
+                "path": "/programacion/hornos",
+                "permiso": "ver_otros"
+            },
+            {
+                "id": "embalaje",
+                "text": "Resecuenciar Embalaje",
+                "icon": "far fa-circle",
+                "path": "/programacion/embalaje",
+                "permiso": "ver_otros"
+            },
+            {
+                "id": "rechazo",
+                "text": "Rechazo Calidad Op Cerradas",
+                "icon": "far fa-circle",
+                "path": "/programacion/rechazo",
+                "permiso": "ver_otros"
+            },
+            {
+                "id": "paradas",
+                "text": "Paradas aautomáticas",
+                "icon": "far fa-circle",
+                "path": "/programacion/paradas",
+                "permiso": "ver_otros"
+            }
+        ]
+    },
+    {
+        "id": "registracion",
+        "text": "Registracion",
+        "icon": "fas fa-clipboard",
+        "path": "/registracion",
+        "permiso": "ver_otros"
+    },
+    {
+        "id": "calidad",
+        "text": "Calidad",
+        "icon": "fas fa-certificate",
+        "path": "/calidad",
+        "permiso": "ver_calidad",
+        "children": [
+            {
+                "id": "produccion",
+                "text": "Producción",
+                "icon": "far fa-circle",
+                "path": "/calidad/produccion",
+                "permiso": "ver_calidad"
+            },
+            {
+                "id": "prueba",
+                "text": "Prueba de Tracción",
+                "icon": "far fa-circle",
+                "path": "/calidad/prueba",
+                "permiso": "ver_calidad"
+            }
+        ]
+    },
+    {
+        "id": "ingreso",
+        "text": "Ingreso ALTE",
+        "icon": "fas fa-door-open",
+        "path": "/ingreso",
+        "permiso": "ver_otros",
+        "children": [
+            {
+                "id": "terminado",
+                "text": "Ingreso Producto Terminado",
+                "icon": "far fa-circle",
+                "path": "/ingreso/terminado",
+                "permiso": "ver_otros"
+            }
+        ]
+    },
+    {
+        "id": "comercial",
+        "text": "Comercial",
+        "icon": "fas fa-store",
+        "path": "/comercial",
+        "permiso": "ver_otros"
+    },
+    {
+        "id": "parametros",
+        "text": "Parámetros",
+        "icon": "fas fa-sliders-h",
+        "path": "/parametros",
+        "permiso": "ver_otros"
+    },
+    {
+        "id": "operaciones",
+        "text": "Operaciones Varias",
+        "icon": "fas fa-industry",
+        "path": "/operaciones",
+        "permiso": "ver_otros",
+        "children": [
+            {
+                "id": "reimpresionET",
+                "text": "Reimpresión Etiquetas",
+                "icon": "far fa-circle",
+                "path": "/operaciones/reimpresionET",
+                "permiso": "ver_otros"
+            },
+            {
+                "id": "reimpresionCA",
+                "text": "Reimpresión Etiquetas Calidad",
+                "icon": "far fa-circle",
+                "path": "/operaciones/reimpresionCA",
+                "permiso": "ver_otros"
+            },
+            {
+                "id": "paradas",
+                "text": "Paradas",
+                "icon": "far fa-circle",
+                "path": "/operaciones/paradas",
+                "permiso": "ver_otros"
+            },
+            {
+                "id": "impresionTA",
+                "text": "Impresión Etiquetas Tambores",
+                "icon": "far fa-circle",
+                "path": "/operaciones/impresionTA",
+                "permiso": "ver_otros"
+            }
+        ]
+    }
+]
