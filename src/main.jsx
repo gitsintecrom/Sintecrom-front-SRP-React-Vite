@@ -30,6 +30,17 @@ import CrearUsuario from './pages/usuarios/CrearUsuario';
 import VerUsuario from './pages/usuarios/VerUsuario';
 import EditarUsuario from './pages/usuarios/EditarUsuario';
 
+import ListadoPermisos from './pages/permisos/ListadoPermisos';
+import CrearPermiso from './pages/permisos/CrearPermiso';
+import VerPermiso from './pages/permisos/VerPermiso';
+import EditarPermiso from './pages/permisos/EditarPermiso';
+
+import ListadoRoles from './pages/roles/ListadoRoles';
+import CrearRol from './pages/roles/CrearRol';
+import VerRol from './pages/roles/VerRol';
+import EditarRol from './pages/roles/EditarRol';
+import AsignarPermisos from './pages/roles/AsignarPermisos';
+
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./components/Auth/Login";
 
@@ -82,6 +93,18 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                     <Route path="usuarios/crear" element={<CrearUsuario />} />
                     <Route path="usuarios/ver/:id" element={<VerUsuario />} />
                     <Route path="usuarios/editar/:id" element={<EditarUsuario />} />
+
+                    <Route path="permisos/listado" element={<ListadoPermisos />} />
+                    <Route path="permisos/crear" element={<CrearPermiso />} />
+                    <Route path="permisos/ver/:id" element={<VerPermiso />} />
+                    <Route path="permisos/editar/:id" element={<EditarPermiso />} />
+
+                    <Route path="roles/listado" element={<ListadoRoles />} />
+                    <Route path="roles/crear" element={<CrearRol />} /> 
+                    <Route path="roles/ver/:id" element={<VerRol />} />
+                    <Route path="roles/editar/:id" element={<EditarRol />} />
+                    <Route path="roles/asignar-permisos/:id" element={<AsignarPermisos />} />
+
                   </Route>
                 </Route>
 

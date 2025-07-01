@@ -15,6 +15,38 @@
         ]
     },
     {
+        "id": "permisos",
+        "text": "Permisos",
+        "icon": "fas fa-key",
+        "path": "/permisos",
+        "permiso": "ver_permisos",
+        "children": [
+            {
+                "id": "listado",
+                "text": "Listado",
+                "icon": "far fa-circle",
+                "path": "/permisos/listado",
+                "permiso": "ver_permisos"
+            }
+        ]
+    },
+    {
+        "id": "roles",
+        "text": "Roles",
+        "icon": "fas fa-user-tag",
+        "path": "/roles",
+        "permiso": "ver_permisos",
+        "children": [
+            {
+                "id": "roles",
+                "text": "Listado",
+                "icon": "far fa-circle",
+                "path": "/roles/listado",
+                "permiso": "ver_roles"
+            }
+        ]
+    },
+    {
         "id": "abastecimiento",
         "text": "Abastecimiento",
         "icon": "fas fa-truck-loading",
