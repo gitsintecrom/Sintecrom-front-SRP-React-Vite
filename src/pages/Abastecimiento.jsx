@@ -1,12 +1,13 @@
 // src/pages/Abastecimiento.jsx
 
 import React, { useState, useMemo, useContext, useEffect } from 'react';
-import axios from 'axios'; // Usar axios normal para el agente local
+import axios from 'axios';
 import axiosInstance from '../api/axiosInstance';
 import Swal from 'sweetalert2';
 import DataTable, { createTheme } from 'react-data-table-component';
 import { ThemeContext } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
+import maquinas from '../data/maquinas.json';
 
 createTheme('adminLteDark', {
   text: { primary: '#FFFFFF', secondary: 'rgba(255, 255, 255, 0.7)' },
@@ -28,12 +29,6 @@ const Abastecimiento = () => {
   const [filtroSuplyChain, setFiltroSuplyChain] = useState(true);
   const [filtroProduccion, setFiltroProduccion] = useState(true);
   const [filtroConStock, setFiltroConStock] = useState(true);
-
-  const maquinas = [
-    { id: 'SL1', nombre: 'Slitter 1', color: 'btn-info' }, { id: 'SL2', nombre: 'Slitter 2', color: 'btn-info' }, { id: 'SL3', nombre: 'Slitter 3', color: 'btn-info' },
-    { id: 'PL1', nombre: 'Plancha 1', color: 'btn-warning' }, { id: 'PL2', nombre: 'Plancha 2', color: 'btn-warning' }, { id: 'PL3', nombre: 'Plancha 3', color: 'btn-warning' },
-    { id: 'PI', nombre: 'Pintura', color: 'btn-danger' }, { id: 'EMB', nombre: 'Embalaje', color: 'btn-danger' }, { id: 'HOR', nombre: 'Horno', color: 'btn-danger' }
-  ];
 
   useEffect(() => {
     if (!maquinaSeleccionada) return;
@@ -89,20 +84,14 @@ const Abastecimiento = () => {
   const askForSupervisor = (row) => {
     Swal.fire({
       title: 'Se requiere autorización de Supervisor',
-      html: `
-        <input type="text" id="swal-user" class="swal2-input" placeholder="Usuario Supervisor" autocomplete="off">
-        <input type="password" id="swal-pass" class="swal2-input" placeholder="Contraseña" autocomplete="new-password">
-      `,
+      html: `<input type="text" id="swal-user" class="swal2-input" placeholder="Usuario Supervisor" autocomplete="off"><input type="password" id="swal-pass" class="swal2-input" placeholder="Contraseña" autocomplete="new-password">`,
       confirmButtonText: 'Autorizar',
       focusConfirm: false,
       showLoaderOnConfirm: true,
       preConfirm: async () => {
         const nombre = document.getElementById('swal-user').value;
         const password = document.getElementById('swal-pass').value;
-        if (!nombre || !password) {
-          Swal.showValidationMessage(`Por favor, ingrese usuario y contraseña`);
-          return false;
-        }
+        if (!nombre || !password) { Swal.showValidationMessage(`Por favor, ingrese usuario y contraseña`); return false; }
         try {
           const response = await axiosInstance.post('/auth/verify-supervisor', { nombre, password });
           return response.data.success;
@@ -121,7 +110,7 @@ const Abastecimiento = () => {
 
   const showPesadaForm = (row) => {
     const pesadasAcumuladas = [];
-    let pollingInterval = null; // Variable para guardar el ID del intervalo
+    let pollingInterval = null;
 
     const updateTotalDisplay = () => {
       const total = pesadasAcumuladas.reduce((sum, val) => sum + val, 0);
@@ -163,7 +152,7 @@ const Abastecimiento = () => {
       didOpen: () => {
         const agenteUrl = import.meta.env.VITE_AGENT_BALANZA_URL || 'http://localhost:12345';
         const pesadaInput = document.getElementById('swal-pesada');
-
+        
         pollingInterval = setInterval(async () => {
           try {
             const response = await axios.get(`${agenteUrl}/peso`);
@@ -174,7 +163,7 @@ const Abastecimiento = () => {
             if (pesadaInput) pesadaInput.placeholder = "Error Conexión";
             clearInterval(pollingInterval);
           }
-        }, 1200); // Consulta la balanza cada 1.2 segundos
+        }, 1200);
 
         document.getElementById('btn-limpiar-ultimo')?.addEventListener('click', () => {
           if (pesadasAcumuladas.length > 0) { pesadasAcumuladas.pop(); updateTotalDisplay(); }
@@ -183,7 +172,7 @@ const Abastecimiento = () => {
           pesadasAcumuladas.length = 0; updateTotalDisplay();
         });
       },
-
+      
       willClose: () => {
         clearInterval(pollingInterval);
       },
@@ -195,7 +184,7 @@ const Abastecimiento = () => {
         if (valorActual > 0) {
           pesadasAcumuladas.push(valorActual);
           updateTotalDisplay();
-          pesadaInput.value = '0.000'; // Limpiar después de acumular
+          pesadaInput.value = '0.000';
         }
         return false;
       },
@@ -207,7 +196,6 @@ const Abastecimiento = () => {
         const totalAcumulado = pesadasAcumuladas.reduce((sum, val) => sum + val, 0);
         return (totalAcumulado + valorActual).toFixed(3);
       },
-
     }).then(async (result) => {
       if (result.isConfirmed) {
         const kilosFinales = parseFloat(result.value);
