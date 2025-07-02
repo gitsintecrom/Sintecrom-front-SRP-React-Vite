@@ -105,11 +105,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                     <Route path="roles/editar/:id" element={<EditarRol />} />
                     <Route path="roles/asignar-permisos/:id" element={<AsignarPermisos />} />
 
+                    {/* Ruta para páginas no encontradas */}
+                    <Route path="*" element={<NotFoundPage />} />
                   </Route>
                 </Route>
-
-                {/* Ruta para páginas no encontradas */}
-                <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </Suspense>
           </BrowserRouter>

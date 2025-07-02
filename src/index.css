@@ -7,8 +7,13 @@
   position: relative;
   min-height: 100vh;
   /* Fondo por defecto para el layout principal */
+  /* background-color: #f4f6f9; */
+}
+
+.content-wrapper {
   background-color: #f4f6f9;
 }
+
 /* En modo oscuro, el fondo del wrapper también cambia */
 body.dark-mode .wrapper {
   background-color: #454d55;
