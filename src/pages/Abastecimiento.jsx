@@ -127,15 +127,11 @@ const Abastecimiento = () => {
           <p><strong>Serie/Lote:</strong> ${row.Origen_Lote ? row.Origen_Lote.substring(0, 11) : ''}</p><hr/>
           <div class="form-group row align-items-center">
             <label for="swal-pesada" class="col-sm-3 col-form-label text-right">Balanza:</label>
-            <div class="col-sm-9">
-              <input type="number" id="swal-pesada" class="swal2-input m-0" placeholder="Esperando lectura..." step="0.001" readonly>
-            </div>
+            <div class="col-sm-9"><input type="number" id="swal-pesada" class="swal2-input m-0" placeholder="Esperando lectura..." step="0.001" readonly></div>
           </div>
           <div class="form-group row align-items-center">
             <label class="col-sm-3 col-form-label text-right">Total:</label>
-            <div class="col-sm-9 d-flex justify-content-start">
-              <strong id="swal-total-display" style="font-size: 1.5rem; padding-left: 10px;">0.000</strong>
-            </div>
+            <div class="col-sm-9 d-flex justify-content-start"><strong id="swal-total-display" style="font-size: 1.5rem; padding-left: 10px;">0.000</strong></div>
           </div>
           <hr/>
           <div class="d-flex justify-content-center">
@@ -148,10 +144,11 @@ const Abastecimiento = () => {
       confirmButtonText: '<i class="far fa-save"></i> Guardar',
       denyButtonText: '<i class="fas fa-plus"></i> Acumular',
       cancelButtonText: 'Cancelar',
-
       didOpen: () => {
         const agenteUrl = import.meta.env.VITE_AGENT_BALANZA_URL || 'http://localhost:12345';
         const pesadaInput = document.getElementById('swal-pesada');
+        console.log("PesadaInput: ", pesadaInput);
+        
         
         pollingInterval = setInterval(async () => {
           try {
@@ -172,40 +169,42 @@ const Abastecimiento = () => {
           pesadasAcumuladas.length = 0; updateTotalDisplay();
         });
       },
-      
       willClose: () => {
         clearInterval(pollingInterval);
       },
-      
       preDeny: () => {
         const pesadaInput = Swal.getHtmlContainer()?.querySelector('#swal-pesada');
+        
         if (!pesadaInput) return false;
         const valorActual = parseFloat(pesadaInput.value) || 0;
+        
         if (valorActual > 0) {
           pesadasAcumuladas.push(valorActual);
           updateTotalDisplay();
-          pesadaInput.value = '0.000';
+          pesadaInput.value = '';
+          pesadaInput.placeholder = '0.000';
         }
         return false;
       },
-      
       preConfirm: () => {
         clearInterval(pollingInterval);
         const pesadaInput = Swal.getHtmlContainer()?.querySelector('#swal-pesada');
         const valorActual = parseFloat(pesadaInput.value) || 0;
         const totalAcumulado = pesadasAcumuladas.reduce((sum, val) => sum + val, 0);
-        return (totalAcumulado + valorActual).toFixed(3);
+        
+        return (totalAcumulado).toFixed(3);
       },
     }).then(async (result) => {
       if (result.isConfirmed) {
         const kilosFinales = parseFloat(result.value);
+        
         if (kilosFinales <= 0) {
           Swal.fire('Atención', 'El peso a registrar debe ser mayor a cero.', 'warning');
           return;
         }
         try {
           await axiosInstance.post('/abastecimiento/pesar', { operacionId: row.Operacion_ID, kilosBalanza: kilosFinales });
-          setOperaciones(prev => prev.map(op => op.Operacion_ID === row.Operacion_ID ? { ...op, Kilos_Balanza: kilosFinales } : op));
+          setOperaciones(prev => prev.map(op => op.Operacion_ID === row.Operacion_ID ? { ...op, Kilos_Balanza: kilosFinales.toString() } : op));
           Swal.fire('¡Guardado!', `Se han registrado ${kilosFinales} Kg.`, 'success');
         } catch (error) {
           Swal.fire('Error', error.response?.data?.error || 'No se pudo registrar la pesada.', 'error');
@@ -221,22 +220,49 @@ const Abastecimiento = () => {
         const isAbastecida = row.Abastecida === '0';
         return <button className={`btn btn-sm ${isAbastecida ? 'btn-success' : 'btn-outline-primary'}`} disabled={isAbastecida} onClick={() => handleAbastecer(row)}>{isAbastecida ? 'Abastecida' : 'Abastecer'}</button>;
       },
-      width: '120px', center: true,
+      width: '120px',
+      style: { justifyContent: 'center' },
     },
     { name: 'Nº Operación', selector: row => row.NumeroDocumento, sortable: true, wrap: true, width: '150px' },
     { name: 'Serie/Lote', selector: row => { const v = row.Origen_Lote; return v ? v.substring(0, v.length > 10 ? 11 : 10) : ''; }, sortable: true },
     { name: 'Tarea', selector: row => row.Tarea, sortable: true, width: '130px' },
-    { name: 'Stock', selector: row => parseFloat(row.Stock || 0), format: row => parseFloat(row.Stock || 0).toFixed(3), sortable: true, right: true },
+    { 
+      name: 'Stock', 
+      selector: row => parseFloat(row.Stock || 0), 
+      format: row => parseFloat(row.Stock || 0).toFixed(3), 
+      sortable: true, 
+      style: { justifyContent: 'right' },
+    },
     { name: 'Nro.Matching', selector: row => row.Nro_Matching, sortable: true },
     { name: 'Nro.Batch', selector: row => row.NroBatch, sortable: true },
     { name: 'Fecha/Hora Inicio', selector: row => row.batch_FechaInicio, format: row => formatCustomDate(row.batch_FechaInicio), sortable: true, wrap: true, width: '150px' },
     { name: 'Fec/Hora Finalización', selector: row => row.batch_FechaFin, format: row => formatCustomDate(row.batch_FechaFin), sortable: true, wrap: true, width: '160px' },
     { name: 'Tipo Operación', selector: row => row.UltimaOperacion === 0 ? 'Raíz' : 'Intermedia', sortable: true },
-    { name: 'Kg.Balanza', selector: row => parseFloat(row.Kilos_Balanza || 0), format: row => parseFloat(row.Kilos_Balanza || 0).toFixed(3), sortable: true, right: true },
-    { name: 'Balanza', cell: row => <button className="btn btn-sm btn-secondary" onClick={() => handlePesarClick(row)}>Pesar</button>, center: true },
+    { 
+      name: 'Kg.Balanza', 
+      selector: row => parseFloat(row.Kilos_Balanza || 0), 
+      format: row => parseFloat(row.Kilos_Balanza || 0).toFixed(3), 
+      sortable: true, 
+      style: { justifyContent: 'right' },
+    },
+    { 
+      name: 'Balanza', 
+      cell: row => <button className="btn btn-sm btn-secondary" onClick={() => handlePesarClick(row)}>Pesar</button>, 
+      style: { justifyContent: 'center' },
+    },
     { name: 'Familia', selector: row => row.Codigo_Producto ? row.Codigo_Producto.substring(8, 10) : '', sortable: true },
-    { name: 'Espesor', selector: row => row.Codigo_Producto ? (parseFloat(row.Codigo_Producto.substring(14, 18)) / 1000).toFixed(3) : '', sortable: true, right: true },
-    { name: 'Ancho', selector: row => row.Operacion_TotalAncho, sortable: true, right: true },
+    { 
+      name: 'Espesor', 
+      selector: row => row.Codigo_Producto ? (parseFloat(row.Codigo_Producto.substring(14, 18)) / 1000).toFixed(3) : '', 
+      sortable: true, 
+      style: { justifyContent: 'right' },
+    },
+    { 
+      name: 'Ancho', 
+      selector: row => row.Operacion_TotalAncho, 
+      sortable: true, 
+      style: { justifyContent: 'right' },
+    },
   ], [operaciones]);
 
   return (
@@ -268,6 +294,8 @@ const Abastecimiento = () => {
                   noDataComponent={<div className='py-5 text-center text-muted'>No hay operaciones pendientes para esta máquina con los filtros aplicados.</div>}
                   pagination
                   paginationComponentOptions={{ rowsPerPageText: 'Filas por página:', rangeSeparatorText: 'de' }}
+                  paginationPerPage={4} 
+                  paginationRowsPerPageOptions={[4, 10, 20, 30, 50]} 
                   theme={theme === 'dark' ? 'adminLteDark' : 'default'}
                   striped
                   highlightOnHover

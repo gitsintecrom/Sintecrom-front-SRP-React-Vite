@@ -7,3 +7,8 @@ export default defineConfig({
   plugins: [react()],
   base: "./",
 });
+//Produccion
+// export default defineConfig({
+//   plugins: [react()],
+//   base: "/sintecrom-app-front/",
+// });
