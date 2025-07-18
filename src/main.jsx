@@ -49,6 +49,8 @@ const Resecuenciar = lazy(() => import('./pages/programacion/Resecuenciar'));
 
 const RechazoCalidad = lazy(() => import('./pages/programacion/RechazoCalidad'));
 
+const ParadasAutomaticas = lazy(() => import('./pages/programacion/ParadasAutomaticas'));
+
 // --- PÁGINA DE CARGA PEREZOSA (LAZY) ---
 // La página con DataTables es la que cargaremos de forma perezosa
 const ListadoUsuarios = lazy(() => import('./pages/usuarios/ListadoUsuarios'));
@@ -88,6 +90,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
                     <Route path="programacion/:codigoMaquina" element={<Resecuenciar />} />
                     <Route path="programacion/rechazo" element={<RechazoCalidad />} />
+                    <Route path="programacion/paradas" element={<ParadasAutomaticas />} />
                     
                     <Route path="registracion" element={<Registracion />} />
                     <Route path="calidad" element={<Calidad />} />
