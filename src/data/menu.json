@@ -83,7 +83,7 @@
             },
             {
                 "id": "paradas",
-                "text": "Paradas aautomáticas",
+                "text": "Paradas automáticas",
                 "icon": "far fa-circle",
                 "path": "/programacion/paradas",
                 "permiso": "ver_otros"
