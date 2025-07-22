@@ -1,6 +1,6 @@
-// src/main.jsx (corregido con lazy loading para tu nueva estructura)
+// /src/main.jsx (Versión Final Corregida)
 
-import React, { Suspense, lazy } from "react"; // 1. IMPORTAR Suspense y lazy
+import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
@@ -13,51 +13,41 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import "./index.css";
 
 // --- PÁGINAS DE CARGA NORMAL (RÁPIDA) ---
-import MainLayout from "./layouts/MainLayout";
-import PublicLayout from "./layouts/PublicLayout"; 
-
-import Dashboard from "./pages/Dashboard"; // Aunque no lo uses en las rutas, puede que lo necesites después
-import Abastecimiento from "./pages/Abastecimiento";
-import Programacion from "./pages/Programacion";
-import Registracion from "./pages/Registracion";
-import Calidad from "./pages/Calidad";
-import Ingreso from "./pages/Ingreso";
-import Comercial from "./pages/Comercial";
-import Parametros from "./pages/Parametros";
-import Operaciones from "./pages/Operaciones";
-
-import CrearUsuario from './pages/usuarios/CrearUsuario';
-import VerUsuario from './pages/usuarios/VerUsuario';
-import EditarUsuario from './pages/usuarios/EditarUsuario';
-
-import ListadoPermisos from './pages/permisos/ListadoPermisos';
-import CrearPermiso from './pages/permisos/CrearPermiso';
-import VerPermiso from './pages/permisos/VerPermiso';
-import EditarPermiso from './pages/permisos/EditarPermiso';
-
-import ListadoRoles from './pages/roles/ListadoRoles';
-import CrearRol from './pages/roles/CrearRol';
-import VerRol from './pages/roles/VerRol';
-import EditarRol from './pages/roles/EditarRol';
-import AsignarPermisos from './pages/roles/AsignarPermisos';
-
+// Quitamos PublicLayout porque ya no se usa
+import MainLayout from "./layouts/MainLayout"; 
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./components/Auth/Login";
+import ChangePassword from "./pages/ChangePassword";
 
-// El nuevo componente de resecuenciamiento
-const Resecuenciar = lazy(() => import('./pages/programacion/Resecuenciar'));
-
-const RechazoCalidad = lazy(() => import('./pages/programacion/RechazoCalidad'));
-
-const ParadasAutomaticas = lazy(() => import('./pages/programacion/ParadasAutomaticas'));
-
-// --- PÁGINA DE CARGA PEREZOSA (LAZY) ---
-// La página con DataTables es la que cargaremos de forma perezosa
+// --- PÁGINAS DE CARGA PEREZOSA (LAZY) ---
+const Abastecimiento = lazy(() => import("./pages/Abastecimiento"));
+const Programacion = lazy(() => import("./pages/Programacion"));
+const Registracion = lazy(() => import("./pages/Registracion"));
+const Calidad = lazy(() => import("./pages/Calidad"));
+const Ingreso = lazy(() => import("./pages/Ingreso"));
+const Comercial = lazy(() => import("./pages/Comercial"));
+const Parametros = lazy(() => import("./pages/Parametros"));
+const Operaciones = lazy(() => import("./pages/Operaciones"));
 const ListadoUsuarios = lazy(() => import('./pages/usuarios/ListadoUsuarios'));
+const CrearUsuario = lazy(() => import('./pages/usuarios/CrearUsuario'));
+const VerUsuario = lazy(() => import('./pages/usuarios/VerUsuario'));
+const EditarUsuario = lazy(() => import('./pages/usuarios/EditarUsuario'));
+const ListadoPermisos = lazy(() => import('./pages/permisos/ListadoPermisos'));
+const CrearPermiso = lazy(() => import('./pages/permisos/CrearPermiso'));
+const VerPermiso = lazy(() => import('./pages/permisos/VerPermiso'));
+const EditarPermiso = lazy(() => import('./pages/permisos/EditarPermiso'));
+const ListadoRoles = lazy(() => import('./pages/roles/ListadoRoles'));
+const CrearRol = lazy(() => import('./pages/roles/CrearRol'));
+const VerRol = lazy(() => import('./pages/roles/VerRol'));
+const EditarRol = lazy(() => import('./pages/roles/EditarRol'));
+const AsignarPermisos = lazy(() => import('./pages/roles/AsignarPermisos'));
+const Resecuenciar = lazy(() => import('./pages/programacion/Resecuenciar'));
+const RechazoCalidad = lazy(() => import('./pages/programacion/RechazoCalidad'));
+const ParadasAutomaticas = lazy(() => import('./pages/programacion/ParadasAutomaticas'));
 
 // Componente visual de carga para mostrar mientras se descarga el componente perezoso
 const LoadingSpinner = () => (
-  <div className="content-wrapper d-flex justify-content-center align-items-center">
+  <div className="d-flex justify-content-center align-items-center vh-100">
     <div className="spinner-border text-primary" style={{ width: '3rem', height: '3rem' }} role="status">
       <span className="sr-only">Cargando...</span>
     </div>
@@ -71,51 +61,41 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <ThemeProvider>
         <LayoutProvider>
           <BrowserRouter>
-            {/* 2. ENVOLVER LAS RUTAS CON SUSPENSE */}
             <Suspense fallback={<LoadingSpinner />}>
               <Routes>
-                {/* RUTAS PÚBLICAS */}
-                <Route element={<PublicLayout />}>
-                  <Route path="/login" element={<Login />} />
-                </Route>
+                {/* ===== INICIO DE LA CORRECCIÓN ===== */}
+                {/* RUTAS PÚBLICAS (AUTÓNOMAS) */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/change-password" element={<ChangePassword />} />
+                {/* ===== FIN DE LA CORRECCIÓN ===== */}
 
                 {/* Rutas protegidas */}
                 <Route element={<ProtectedRoute />}>
                   <Route path="/" element={<MainLayout />}>
-                    {/* Redirección inicial a /abastecimiento */}
                     <Route index element={<Navigate to="/abastecimiento" replace />} />
-                    
-                    {/* Rutas de las páginas */}
                     <Route path="abastecimiento" element={<Abastecimiento />} />
-
                     <Route path="programacion/:codigoMaquina" element={<Resecuenciar />} />
                     <Route path="programacion/rechazo" element={<RechazoCalidad />} />
                     <Route path="programacion/paradas" element={<ParadasAutomaticas />} />
-                    
                     <Route path="registracion" element={<Registracion />} />
                     <Route path="calidad" element={<Calidad />} />
                     <Route path="ingreso" element={<Ingreso />} />
                     <Route path="comercial" element={<Comercial />} />
                     <Route path="parametros" element={<Parametros />} />
                     <Route path="operaciones" element={<Operaciones />} />
-
-                    {/* 3. RUTA QUE USA EL COMPONENTE PEREZOSO */}
                     <Route path="usuarios/listado" element={<ListadoUsuarios />} />
                     <Route path="usuarios/crear" element={<CrearUsuario />} />
                     <Route path="usuarios/ver/:id" element={<VerUsuario />} />
                     <Route path="usuarios/editar/:id" element={<EditarUsuario />} />
-
                     <Route path="permisos/listado" element={<ListadoPermisos />} />
                     <Route path="permisos/crear" element={<CrearPermiso />} />
                     <Route path="permisos/ver/:id" element={<VerPermiso />} />
                     <Route path="permisos/editar/:id" element={<EditarPermiso />} />
-
                     <Route path="roles/listado" element={<ListadoRoles />} />
                     <Route path="roles/crear" element={<CrearRol />} /> 
                     <Route path="roles/ver/:id" element={<VerRol />} />
                     <Route path="roles/editar/:id" element={<EditarRol />} />
                     <Route path="roles/asignar-permisos/:id" element={<AsignarPermisos />} />
-
                   </Route>
                 </Route>
 

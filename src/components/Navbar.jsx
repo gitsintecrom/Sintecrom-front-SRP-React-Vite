@@ -1,7 +1,9 @@
-// src/components/Navbar.jsx (Versión Final Completa)
+// /src/components/Navbar.jsx (Versión Final Completa)
 
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
+import axiosInstance from "../api/axiosInstance"; // <-- Asegúrate de importar tu instancia de axios
 import { useAuth } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { useLayout } from "../context/LayoutContext";
@@ -24,6 +26,66 @@ const Navbar = () => {
     } else {
       toggleDesktopSidebar();
     }
+  };
+
+  // --- FUNCIÓN NUEVA PARA CAMBIAR CONTRASEÑA ---
+  const handleChangePassword = () => {
+    Swal.fire({
+      title: 'Cambiar Contraseña',
+      html: `
+        <input type="password" id="swal-current-password" class="swal2-input" placeholder="Contraseña Actual" autocomplete="current-password">
+        <input type="password" id="swal-new-password" class="swal2-input" placeholder="Nueva Contraseña" autocomplete="new-password">
+        <input type="password" id="swal-confirm-password" class="swal2-input" placeholder="Confirmar Nueva Contraseña" autocomplete="new-password">
+      `,
+      confirmButtonText: 'Cambiar',
+      focusConfirm: false,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      preConfirm: () => {
+        const currentPassword = document.getElementById('swal-current-password').value;
+        const newPassword = document.getElementById('swal-new-password').value;
+        const confirmPassword = document.getElementById('swal-confirm-password').value;
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+          Swal.showValidationMessage('Por favor, complete todos los campos.');
+          return false;
+        }
+        if (newPassword !== confirmPassword) {
+          Swal.showValidationMessage('Las nuevas contraseñas no coinciden.');
+          return false;
+        }
+        if (newPassword.length < 6) {
+          Swal.showValidationMessage('La nueva contraseña debe tener al menos 6 caracteres.');
+          return false;
+        }
+
+        return { currentPassword, newPassword };
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { currentPassword, newPassword } = result.value;
+        try {
+          Swal.fire({ title: 'Cambiando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+          
+          // Llamada al nuevo endpoint del backend
+          await axiosInstance.post('/users/change-password', { currentPassword, newPassword });
+          
+          Swal.close();
+          Swal.fire({
+            title: '¡Éxito!',
+            text: 'Tu contraseña ha sido cambiada.',
+            icon: 'success',
+          });
+        } catch (error) {
+          Swal.close();
+          Swal.fire({
+            title: 'Error',
+            text: error.response?.data?.error || 'No se pudo cambiar la contraseña.',
+            icon: 'error',
+          });
+        }
+      }
+    });
   };
 
   return (
@@ -56,6 +118,8 @@ const Navbar = () => {
                 <p>{user.nombre}<small>{user.email}</small></p>
               </li>
               <li className="user-footer">
+                {/* --- BOTÓN NUEVO --- */}
+                <button onClick={handleChangePassword} className="btn btn-default btn-flat">Cambiar Pass</button>
                 <button onClick={handleLogout} className="btn btn-default btn-flat float-right">Cerrar sesión</button>
               </li>
             </ul>

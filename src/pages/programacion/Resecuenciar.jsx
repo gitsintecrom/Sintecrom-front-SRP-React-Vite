@@ -103,7 +103,7 @@ const Resecuenciar = () => {
   
   return (
     <div style={{
-        backgroundColor: '#800000', 
+        backgroundColor: '#FFFFFF', 
         width: '100%', 
         height: 'calc(100vh - 57px)',
         padding: '10px',
@@ -149,8 +149,8 @@ const Resecuenciar = () => {
                 conditionalRowStyles={conditionalRowStyles}
                 // ===== SE ELIMINAN LAS PROPS onRowClicked y highlightOnHover =====
                 pagination
-                paginationPerPage={15}
-                paginationRowsPerPageOptions={[15, 30, 50]}
+                paginationPerPage={10}
+                paginationRowsPerPageOptions={[10, 15, 30, 50]}
             />
         </div>
     </div>

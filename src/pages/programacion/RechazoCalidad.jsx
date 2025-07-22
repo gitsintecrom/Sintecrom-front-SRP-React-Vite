@@ -111,7 +111,7 @@ const RechazoCalidad = () => {
   ], []);
 
   return (
-    <div style={{ backgroundColor: '#800000', width: '100%', height: 'calc(100vh - 57px)', padding: '10px', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ backgroundColor: '#FFFFFF', width: '100%', height: 'calc(100vh - 57px)', padding: '10px', display: 'flex', flexDirection: 'column' }}>
         <div style={{ backgroundColor: '#6c757d', color: 'white', padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexShrink: 0 }}>
             <h1 style={{ fontSize: '1.2rem', margin: 0, fontWeight: 'bold' }}>
                 REGISTRACION - Operaciones cerradas
@@ -146,8 +146,8 @@ const RechazoCalidad = () => {
                     pagination: { style: { backgroundColor: '#c0c0c0', color: 'black', borderTop: 'none', flexShrink: 0 } }
                 }}
                 pagination
-                paginationPerPage={20}
-                paginationRowsPerPageOptions={[20, 50, 100]}
+                paginationPerPage={10}
+                paginationRowsPerPageOptions={[10, 20, 50, 100]}
                 dense
             />
         </div>

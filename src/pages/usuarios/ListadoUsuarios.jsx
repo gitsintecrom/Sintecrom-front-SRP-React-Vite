@@ -6,6 +6,8 @@ import axiosInstance from '../../api/axiosInstance';
 import Swal from 'sweetalert2';
 import DataTable, { createTheme } from 'react-data-table-component';
 import { ThemeContext } from '../../context/ThemeContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
 
 // Crear y registrar tema oscuro personalizado para la tabla
 createTheme('adminLteDark', {
@@ -41,6 +43,33 @@ const ListadoUsuarios = () => {
         setLoading(false);
       });
   }, []);
+
+  // --- FUNCIÓN NUEVA PARA BLANQUEAR CONTRASEÑA ---
+  const handleResetPassword = (id, nombre) => {
+    Swal.fire({
+      title: `¿Blanquear contraseña de ${nombre}?`,
+      text: "Se establecerá una contraseña por defecto y se le pedirá al usuario que la cambie en su próximo inicio de sesión.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#ffc107', // Color amarillo para advertencia
+      confirmButtonText: 'Sí, blanquear',
+      cancelButtonText: 'Cancelar'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                Swal.fire({ title: 'Procesando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                await axiosInstance.post(`/users/reset-password/${id}`);
+                Swal.close();
+                Swal.fire('¡Éxito!', `La contraseña de ${nombre} ha sido blanqueada.`, 'success');
+                // No es necesario recargar la tabla, ya que no cambia nada visualmente.
+            } catch (error) {
+                Swal.close();
+                const errorMessage = error.response?.data?.error || 'No se pudo blanquear la contraseña.';
+                Swal.fire('Error', errorMessage, 'error');
+            }
+        }
+    });
+  };
 
   const handleDelete = (id, nombre) => {
     Swal.fire({
@@ -91,6 +120,10 @@ const ListadoUsuarios = () => {
         <div className="btn-group" role="group">
           <Link to={`/usuarios/ver/${row.id}`} className="btn btn-info btn-sm" data-tooltip-id="my-tooltip" data-tooltip-content="Ver Usuario"><i className="fas fa-eye"></i></Link>
           <Link to={`/usuarios/editar/${row.id}`} className="btn btn-success btn-sm" data-tooltip-id="my-tooltip" data-tooltip-content="Editar Usuario"><i className="fas fa-pencil-alt"></i></Link>
+          {/* --- BOTÓN NUEVO --- */}
+          <button onClick={() => handleResetPassword(row.id, row.name)} className="btn btn-warning btn-sm" title="Blanquear Contraseña">
+            <FontAwesomeIcon icon={faKey} />
+          </button>
           <button onClick={() => handleDelete(row.id, row.name)} className="btn btn-danger btn-sm" data-tooltip-id="my-tooltip" data-tooltip-content="Eliminar Usuario"><i className="fas fa-trash"></i></button>
         </div>
       ),

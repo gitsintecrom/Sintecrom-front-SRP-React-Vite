@@ -1,104 +1,6 @@
-// // src/components/Auth/Login.jsx (Versión Final con manejo de clases del body)
+// /src/components/Auth/Login.jsx (Versión Final con Estilos Corregidos)
 
-// import React, { useState, useEffect } from "react"; // 1. IMPORTAR useEffect
-// import { useNavigate } from 'react-router-dom';
-// import { useAuth } from "../../context/AuthContext";
-// import axiosInstance from '../../api/axiosInstance';
-
-// const Login = () => {
-//   const [nombre, setNombre] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [error, setError] = useState("");
-//   const [loading, setLoading] = useState(false);
-
-//   const { login } = useAuth();
-//   const navigate = useNavigate();
-
-//   // 2. AÑADIR ESTE useEffect PARA MANEJAR LAS CLASES DEL BODY
-//   useEffect(() => {
-//     const body = document.body;
-//     // Añade SOLO la clase que necesita
-//     body.classList.add('login-page');
-
-//     // La función de limpieza se asegura de quitarla al salir
-//     return () => {
-//       body.classList.remove('login-page');
-//     };
-//   }, []); // Se ejecuta solo al montar/desmontar
-
-//   const handleSubmit = async (e) => {
-//     // ... (la lógica de handleSubmit no cambia)
-//     e.preventDefault();
-//     setLoading(true);
-//     try {
-//       const response = await axiosInstance.post('/auth/login', { nombre, password });
-//       const data = response.data;
-//       if (data.success && data.token) {
-//         login(data.token, data.user);
-//         navigate('/abastecimiento');
-//       }
-//     } catch (err) {
-//       const errorMessage = err.response?.data?.message || "Hubo un error al iniciar sesión.";
-//       setError(errorMessage);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   // En el return, ya no necesitamos el div con la clase 'login-page'
-//   // porque la clase ahora está en el body, como AdminLTE espera.
-//   return (
-//     <div className="login-box">
-//       <div className="card card-outline card-primary">
-//         <div className="card-header text-center">
-//           <h3>{import.meta.env.VITE_APP_NAME}</h3>
-//         </div>
-//         <div className="card-body">
-//           {/* Añadir autoComplete="off" al formulario */}
-//           <form onSubmit={handleSubmit} autoComplete="off">
-//             <div className="input-group mb-3">
-//               <input
-//                 type="text"
-//                 className="form-control"
-//                 placeholder="Nombre de Usuario"
-//                 value={nombre}
-//                 onChange={(e) => setNombre(e.target.value)}
-//                 required
-//                 disabled={loading}
-//                 autoComplete="new-password" // <-- Truco para desactivar
-//               />
-//             </div>
-//             <div className="input-group mb-3">
-//               <input
-//                 type="password"
-//                 className="form-control"
-//                 placeholder="Contraseña"
-//                 value={password}
-//                 onChange={(e) => setPassword(e.target.value)}
-//                 required
-//                 disabled={loading}
-//                 autoComplete="new-password" // <-- Truco para desactivar
-//               />
-//             </div>
-//             <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-//               {loading ? <span className="spinner-border spinner-border-sm"></span> : 'Iniciar Sesión'}
-//             </button>
-//             {error && <p className="text-danger mt-2">{error}</p>}
-//           </form>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Login;
-
-
-
-
-// src/components/Auth/Login.jsx
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../context/AuthContext";
 import axiosInstance from '../../api/axiosInstance';
@@ -112,7 +14,13 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // Ya NO es necesario el useEffect aquí. PublicLayout lo maneja.
+  // useEffect para gestionar la clase del <body> y asegurar el estilo correcto
+  useEffect(() => {
+    document.body.classList.add("login-page");
+    return () => {
+      document.body.classList.remove("login-page");
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -129,7 +37,12 @@ const Login = () => {
 
       if (data.success && data.token) {
         login(data.token, data.user);
-        navigate('/abastecimiento'); // Redirección con el hook de React Router
+        
+        if (data.user.cambioPassword === 1 || data.user.cambioPassword === true) {
+          navigate('/change-password');
+        } else {
+          navigate('/abastecimiento');
+        }
       } else {
         setError(data.message || "Credenciales incorrectas.");
       }
@@ -142,15 +55,17 @@ const Login = () => {
   };
 
   return (
-    // El div exterior con clase 'login-page' se ha quitado.
-    // El layout 'PublicLayout' ahora añade la clase al <body>.
     <div className="login-box">
       <div className="card card-outline card-primary">
         <div className="card-header text-center">
-          <h3>{import.meta.env.VITE_APP_NAME}</h3>
+          {/* Título como en ChangePassword */}
+          <a href="#" className="h1"><b>Sintecrom</b></a> 
         </div>
         <div className="card-body">
+          {/* Mensaje de bienvenida */}
+          <p className="login-box-msg">Inicia sesión para comenzar</p> 
           <form onSubmit={handleSubmit} autoComplete="off">
+            {/* Input de usuario con ícono */}
             <div className="input-group mb-3">
               <input
                 type="text"
@@ -160,9 +75,15 @@ const Login = () => {
                 onChange={(e) => setNombre(e.target.value)}
                 required
                 disabled={loading}
-                autoComplete="new-password"
+                autoComplete="username"
               />
+              <div className="input-group-append">
+                <div className="input-group-text">
+                  <span className="fas fa-user"></span>
+                </div>
+              </div>
             </div>
+            {/* Input de contraseña con ícono */}
             <div className="input-group mb-3">
               <input
                 type="password"
@@ -172,17 +93,28 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={loading}
-                autoComplete="new-password"
+                autoComplete="current-password"
               />
+              <div className="input-group-append">
+                <div className="input-group-text">
+                  <span className="fas fa-lock"></span>
+                </div>
+              </div>
             </div>
-            <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-              {loading ? (
-                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-              ) : (
-                'Iniciar Sesión'
-              )}
-            </button>
-            {error && <p className="text-danger mt-2">{error}</p>}
+            {/* Botón dentro de una fila para ocupar todo el ancho */}
+            <div className="row">
+                <div className="col-12">
+                    <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                    {loading ? (
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    ) : (
+                        'Iniciar Sesión'
+                    )}
+                    </button>
+                </div>
+            </div>
+            {/* Mensaje de error centrado */}
+            {error && <p className="text-danger mt-3 text-center">{error}</p>}
           </form>
         </div>
       </div>
