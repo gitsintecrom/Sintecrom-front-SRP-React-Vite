@@ -90,14 +90,17 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                   <Route path="comercial" element={<Comercial />} />
                   <Route path="parametros" element={<Parametros />} />
                   <Route path="operaciones" element={<Operaciones />} />
+
                   <Route path="usuarios/listado" element={<ListadoUsuarios />} />
                   <Route path="usuarios/crear" element={<CrearUsuario />} />
                   <Route path="usuarios/ver/:id" element={<VerUsuario />} />
                   <Route path="usuarios/editar/:id" element={<EditarUsuario />} />
+
                   <Route path="permisos/listado" element={<ListadoPermisos />} />
                   <Route path="permisos/crear" element={<CrearPermiso />} />
                   <Route path="permisos/ver/:id" element={<VerPermiso />} />
                   <Route path="permisos/editar/:id" element={<EditarPermiso />} />
+                  
                   <Route path="roles/listado" element={<ListadoRoles />} />
                   <Route path="roles/crear" element={<CrearRol />} /> 
                   <Route path="roles/ver/:id" element={<VerRol />} />
