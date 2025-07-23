@@ -76,7 +76,7 @@
             },
             {
                 "id": "rechazo",
-                "text": "Rechazo Calidad Op Cerradas",
+                "text": "Rechazo Calidad Operaciones Cerradas",
                 "icon": "far fa-circle",
                 "path": "/programacion/rechazo",
                 "permiso": "ver_otros"
