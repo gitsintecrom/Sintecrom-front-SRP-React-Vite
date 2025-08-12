@@ -167,3 +167,15 @@ body.dark-mode input:-webkit-autofill:active {
     -webkit-text-fill-color: #fff !important;
     border-color: #6c757d !important;
 }
+
+/* Estilos para las filas de la tabla de operaciones */
+.rdt_TableRow.row-bloqueada { background-color: var(--danger) !important; color: white !important; }
+.rdt_TableRow.row-en_calidad { background-color: var(--warning) !important; color: black !important; }
+.rdt_TableRow.row-en_proceso { background-color: var(--secondary) !important; color: white !important; }
+.rdt_TableRow.row-suspendida { background-color: #e9ecef !important; color: black !important; }
+.rdt_TableRow.row-lista { background-color: var(--success) !important; color: white !important; }
+
+/* Asegurar que los botones de selección sean visibles en filas oscuras */
+.rdt_TableRow.row-bloqueada .sc-gJgZMw, .rdt_TableRow.row-en_proceso .sc-gJgZMw, .rdt_TableRow.row-lista .sc-gJgZMw {
+    color: white !important;
+}
