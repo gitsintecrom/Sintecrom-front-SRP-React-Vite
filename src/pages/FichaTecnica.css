@@ -1,0 +1,40 @@
+.fichatecnica-container {
+    padding: 1rem;
+    background-color: #8B0000; /* Fondo Marrón/Rojo oscuro */
+    color: white;
+    font-family: Arial, sans-serif;
+    min-height: calc(100vh - 57px); /* Ocupa toda la altura disponible */
+}
+
+.fichatecnica-header {
+    background-color: #6c757d; /* Fondo gris */
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.header-info .info-item {
+    font-size: 1.1rem;
+}
+
+.header-title {
+    background-color: #8B0000;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    border: 2px outset #ccc;
+    font-size: 1.2rem;
+}
+
+.fichatecnica-table {
+    background-color: #8B0000;
+}

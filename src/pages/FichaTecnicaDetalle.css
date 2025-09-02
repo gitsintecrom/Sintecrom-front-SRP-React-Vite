@@ -1,0 +1,231 @@
+/* src/pages/FichaTecnicaDetalle.css (VERSIÓN COMPLETA Y FINAL) */
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 1.5rem;
+    color: white;
+    background-color: #8B0000;
+}
+
+.ft-detalle-container {
+    padding: 1rem;
+    background-color: #8B0000;
+    color: white;
+    font-family: Arial, sans-serif;
+    min-height: calc(100vh - 57px);
+}
+
+/* Header Superior */
+.ft-detalle-header {
+    background-color: #6c757d;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.ft-detalle-header .header-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.ft-detalle-header .header-title-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.ft-main-title {
+    background-color: #8B0000;
+    border: 1px solid white;
+    padding: 0.2rem 1.5rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.ft-status {
+    background-color: lightgray;
+    color: black;
+    font-weight: bold;
+    padding: 0.1rem 0.8rem;
+    border-radius: 3px;
+    font-size: 1.1rem;
+}
+
+.close-button {
+    align-self: flex-start;
+}
+
+/* Header de Producto */
+.ft-product-header {
+    background-color: #6c757d;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.product-grid {
+    display: grid;
+    /* Creamos una grilla de 9 columnas para alinear todo */
+    grid-template-columns: repeat(9, 1fr);
+    gap: 0.5rem 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Clases para controlar la expansión de los elementos */
+.info-field.span-2 {
+    grid-column: span 2;
+}
+.info-field.span-4 {
+    grid-column: span 4;
+}
+.info-field.span-5 {
+    grid-column: span 5;
+}
+
+.info-field {
+    background-color: #a9a9a9;
+    padding: 0.3rem 0.5rem;
+    border-radius: 3px;
+    color: black;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    min-height: 38px;
+}
+
+.info-label {
+    white-space: nowrap;
+}
+
+.info-value {
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.product-dimensions {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+    border-top: 2px solid #8B0000;
+    padding-top: 1rem;
+}
+
+.product-dimensions .info-field {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Pestañas */
+.ft-tabs-container {
+    background-color: #f0f0f0;
+    color: black;
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.nav-tabs .nav-link {
+    color: #495057;
+}
+
+.nav-tabs .nav-link.active {
+    color: #000;
+    background-color: #f0f0f0;
+    border-color: #dee2e6 #dee2e6 #f0f0f0;
+    font-weight: bold;
+}
+
+.tab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 0.8rem;
+}
+
+.tab-grid-detalle {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.tab-grid-detalle > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.tolerancias-grid {
+    grid-template-columns: auto 1fr 1fr;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    margin-bottom: 2rem;
+}
+.tolerancias-grid > div {
+    background-color: #e9ecef;
+    padding: 0.4rem;
+    border-radius: 3px;
+    text-align: center;
+}
+.tolerancias-grid .grid-label {
+    text-align: left;
+    background-color: transparent;
+    font-weight: normal;
+}
+.tolerancias-grid .grid-header {
+    background-color: #6c757d;
+    color: white;
+}
+
+.additional-tolerances {
+    border-top: 1px solid #ccc;
+    padding-top: 1rem;
+}
+
+.pintura-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.pintura-group {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1rem;
+}
+.pintura-group h5 {
+    margin-top: -1.7rem;
+    background: #f0f0f0;
+    display: inline-block;
+    padding: 0 0.5rem;
+    margin-left: 0.5rem;
+    font-weight: bold;
+}
+.pintura-footer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 0.8rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ccc;
+}
+
+.embalaje-notas {
+    margin-top: 1rem;
+}
+
+.embalaje-notas textarea {
+    width: 100%;
+    margin-top: 0.5rem;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    color: #212529;
+    resize: vertical;
+}

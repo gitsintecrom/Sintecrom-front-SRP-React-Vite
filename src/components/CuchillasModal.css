@@ -1,0 +1,89 @@
+/* src/components/CuchillasModal.css */
+
+.cuchillas-modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1050;
+}
+
+.cuchillas-modal-content {
+    background-color: #f0f0f0; color: black;
+    padding: 20px; border-radius: 8px;
+    width: 95vw; max-width: 1400px;
+    height: 90vh;
+    display: flex; flex-direction: column;
+}
+
+.cuchillas-modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+.close-button { background: none; border: none; font-size: 1.8rem; cursor: pointer; }
+
+.cuchillas-info-header, .armado-info { background-color: #e9ecef; padding: 8px; border: 1px solid #ccc; margin-top: 10px; font-size: 0.9rem;}
+.cuchillas-info-header { display: flex; justify-content: space-around; }
+.armado-info {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ejes-container {
+    flex-grow: 1;
+    overflow-x: auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: white;
+    margin-top: 10px;
+}
+
+.eje-grafico { margin-bottom: 25px; min-height: 150px; /* Damos altura mínima */}
+.eje-label { font-weight: bold; margin-bottom: 5px; }
+
+.barras-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start; /* Alineamos todo arriba */
+    height: 120px; /* Aumentamos altura para dar espacio a las etiquetas */
+}
+
+/* ===== INICIO DE LOS CAMBIOS ===== */
+
+.barra-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.barra-etiqueta {
+    height: 20px; /* Altura fija para las etiquetas */
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+    width: 100%;
+}
+
+.barra {
+    height: 100px; /* Altura fija para las barras */
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    border-left: 1px solid #dbdbdb;
+}
+
+/* ===== FIN DE LOS CAMBIOS ===== */
+
+.barra-medida { transform: rotate(180deg); padding-bottom: 2px;}
+
+.cuchillas-modal-footer {
+    border-top: 1px solid #ccc; padding-top: 15px; margin-top: 15px;
+    display: flex; justify-content: space-between;
+    font-size: 0.8rem;
+}
+.footer-section ul { list-style-type: none; padding-left: 0; }
+.footer-section-impresion { min-width: 250px; text-align: right; }

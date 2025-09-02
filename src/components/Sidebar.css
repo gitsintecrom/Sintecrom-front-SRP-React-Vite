@@ -1,0 +1,17 @@
+/* src/components/Sidebar.css */
+
+/*
+  Esta regla es la más importante.
+  Le dice al navegador: "Para cualquier enlace (<a>) que sea un 'nav-link'
+  dentro de la barra lateral (main-sidebar), NUNCA le pongas un subrayado,
+  incluso si está activo o en estado hover".
+*/
+.main-sidebar .nav-link,
+.main-sidebar .brand-link {
+    text-decoration: none !important;
+}
+
+/* Opcional: mejora visual para el logo */
+.app-logo {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}

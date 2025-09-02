@@ -1,0 +1,183 @@
+/* /src/components/PasadaForm.css -- VERSIÓN FINAL CORREGIDA */
+
+.small-modal {
+    width: 750px !important;
+    height: auto !important;
+    max-height: 90vh;
+}
+
+.input-main-container {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-group-top {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #ccc;
+}
+
+.input-group-top .form-group {
+    flex: 1;
+    text-align: center;
+}
+
+.input-group-cortes {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.cortes-title {
+    position: absolute;
+    top: -0.7em;
+    left: 1em;
+    background-color: #f0f0f0;
+    padding: 0 0.5em;
+    font-weight: bold;
+}
+
+.corte-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.corte-row .form-control {
+    width: 100px;
+    text-align: center;
+}
+
+.corte-x {
+    font-weight: bold;
+}
+
+.btn-confirma {
+    align-self: flex-end;
+    width: 150px;
+}
+
+.pasada-form-container {
+    background-color: #e9ecef;
+    padding: 2rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+
+.pasada-form-grid {
+    display: grid;
+    grid-template-columns: 250px 1fr 1fr;
+    gap: 1.5rem;
+    color: black;
+}
+
+.form-group-box {
+    background-color: #d1d5db;
+    border: 1px solid #6c757d;
+    padding: 0.75rem;
+    border-radius: 4px;
+}
+.form-group-box > label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* Columna Izquierda */
+.ancho-corte-table-wrapper {
+    background-color: white;
+}
+
+.ancho-corte-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.ancho-corte-table th, .ancho-corte-table td {
+    border: 1px solid #ccc;
+    padding: 0.25rem;
+    text-align: center;
+}
+.ancho-corte-table th { background-color: #e9ecef;}
+.ancho-corte-table tbody tr { background-color: white; }
+
+/* Columna Central */
+.form-column-center {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.input-row label { margin: 0; flex-shrink: 0; font-weight: bold; }
+.input-row input, .input-row textarea { width: 100%; }
+
+.apariencia-inferior .checkbox-group {
+    display: flex;
+    flex-direction: column;
+}
+.apariencia-inferior .checkbox-group label {
+    font-weight: normal;
+}
+
+.identificacion-bobina .radio-group {
+    display: flex;
+    gap: 1rem;
+}
+.identificacion-bobina .radio-group label {
+    font-weight: normal;
+}
+
+/* Columna Derecha */
+.form-column-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+.pasada-title {
+    font-size: 2rem;
+    font-weight: bold;
+    background-color: #6c757d;
+    color: white;
+    padding: 0.5rem 2rem;
+    border-radius: 4px;
+}
+
+.final-pasada {
+    width: 100%;
+}
+
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 150px;
+}
+.form-actions .btn {
+    width: 100%;
+    font-weight: bold;
+}
+
+.espesor .input-row > label {
+    min-width: 55px;
+    text-align: right;
+}
+
+/* ===== CORRECCIÓN DE ALINEACIÓN PARA FINAL PASADA ===== */
+.final-pasada .input-row > label {
+    min-width: 250px;
+    text-align: right;
+}

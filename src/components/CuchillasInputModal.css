@@ -1,0 +1,65 @@
+.small-modal {
+    width: 750px !important;
+    height: auto !important;
+    max-height: 90vh;
+}
+
+.input-main-container {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-group-top {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #ccc;
+}
+
+.input-group-top .form-group {
+    flex: 1;
+    text-align: center;
+}
+
+.input-group-cortes {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.cortes-title {
+    position: absolute;
+    top: -0.7em;
+    left: 1em;
+    background-color: #f0f0f0;
+    padding: 0 0.5em;
+    font-weight: bold;
+}
+
+.corte-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.corte-row .form-control {
+    width: 100px;
+    text-align: center;
+}
+
+.corte-x {
+    font-weight: bold;
+}
+
+.btn-confirma {
+    align-self: flex-end;
+    width: 150px;
+}
