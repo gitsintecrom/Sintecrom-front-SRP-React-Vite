@@ -95,7 +95,7 @@ const EditarPermiso = () => {
                     </div>
                     <hr/>
                     <div className="d-flex justify-content-between">
-                      <Link to="/permisos" className="btn btn-secondary"><i className="fas fa-reply"></i> Volver</Link>
+                      <Link to="/permisos/listado" className="btn btn-secondary"><i className="fas fa-reply"></i> Volver</Link>
                       <button type="submit" className="btn btn-primary"><i className="far fa-save"></i> Guardar Cambios</button>
                     </div>
                   </form>
