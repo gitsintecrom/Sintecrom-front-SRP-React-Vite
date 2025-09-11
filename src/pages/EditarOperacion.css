@@ -74,13 +74,13 @@
     padding-bottom: 0.5rem; margin-bottom: 0.5rem;
 }
 .grid-cell-desc {
-    background-color: #f0e68c; color: rgb(95, 95, 95); padding: 0.5rem; border-radius: 4px; font-weight: bold;
+    background-color: #f0e68c; color: black; padding: 0.5rem; border-radius: 4px; font-weight: bold;
     font-size: 0.8rem; white-space: pre-wrap; text-align: center; border: 2px outset #ccc;
     display: flex; flex-direction: column; justify-content: center;
 }
 .grid-cell-input {
     text-align: center; font-weight: bold; font-size: 1.5rem; background-color: #f0e68c;
-    color: rgb(95, 95, 95); border: 2px inset #aaa; padding: 0.25rem;
+    color: black; border: 2px inset #aaa; padding: 0.25rem;
 }
 
 /* --- Footer (Balance) --- */
