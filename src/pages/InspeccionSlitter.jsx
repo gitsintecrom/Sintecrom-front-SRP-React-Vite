@@ -128,13 +128,21 @@ const InspeccionSlitter = () => {
             </tr>
         );
     }
+
+    console.log(localStorage.getItem('user'));
+
+    const datosUsurario = JSON.parse(localStorage.getItem('user'));
+
+    console.log(datosUsurario.nombre);
+    
+    
     
     return (
         <div className="inspeccion-container">
             <div className="inspeccion-header-bar">
                 <span className="inspeccion-title">REGISTRACION - Producción</span>
                 <span className="inspeccion-title">INSPECCION SLITTER</span>
-                <span>Usuario: {localStorage.getItem('user')}</span>
+                <span>Usuario: {datosUsurario.nombre}</span>
                 <button onClick={() => navigate(-1)} className="btn btn-sm btn-light">
                     <i className="fas fa-door-open"></i>
                 </button>

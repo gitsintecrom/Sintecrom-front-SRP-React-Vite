@@ -557,6 +557,9 @@ const DetalleOperacion = () => {
     const scrapProgramado = header.ScrapProgramado || 63;
     const kgsProgramados = header.KgsProgramados || 4267;
 
+    console.log(header);
+    
+
     return (
         <>
             <div className="detalle-container">

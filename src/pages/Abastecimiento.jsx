@@ -1,4 +1,4 @@
-// src/pages/Abastecimiento.jsx
+// // src/pages/Abastecimiento.jsx
 
 import React, { useState, useMemo, useContext, useEffect } from 'react';
 import axios from 'axios';
@@ -127,11 +127,11 @@ const Abastecimiento = () => {
           <p><strong>Serie/Lote:</strong> ${row.Origen_Lote ? row.Origen_Lote.substring(0, 11) : ''}</p><hr/>
           <div class="form-group row align-items-center">
             <label for="swal-pesada" class="col-sm-3 col-form-label text-right">Balanza:</label>
-            <div class="col-sm-9"><input type="number" id="swal-pesada" class="swal2-input m-0" placeholder="Esperando lectura..." step="0.001" readonly></div>
+            <div className="col-sm-9"><input type="number" id="swal-pesada" class="swal2-input m-0" placeholder="Esperando lectura..." step="0.001" readonly></div>
           </div>
           <div class="form-group row align-items-center">
             <label class="col-sm-3 col-form-label text-right">Total:</label>
-            <div class="col-sm-9 d-flex justify-content-start"><strong id="swal-total-display" style="font-size: 1.5rem; padding-left: 10px;">0.000</strong></div>
+            <div className="col-sm-9 d-flex justify-content-start"><strong id="swal-total-display" style="font-size: 1.5rem; padding-left: 10px;">0.000</strong></div>
           </div>
           <hr/>
           <div class="d-flex justify-content-center">
@@ -148,7 +148,6 @@ const Abastecimiento = () => {
         const agenteUrl = import.meta.env.VITE_AGENT_BALANZA_URL || 'http://localhost:12345';
         const pesadaInput = document.getElementById('swal-pesada');
         console.log("PesadaInput: ", pesadaInput);
-        
         
         pollingInterval = setInterval(async () => {
           try {
@@ -267,10 +266,10 @@ const Abastecimiento = () => {
 
   return (
     <>
-      <div className="content-header">
-        <div className="container-fluid"><h1><b>Abastecimiento</b></h1></div>
+      <div className="content-header" style={{ backgroundColor: '#dc3545' }}>
+        <div className="container-fluid"><h1 style={{ color: '#FFFFFF' }}><b>Abastecimiento</b></h1></div>
       </div>
-      <div className="content">
+      <div className="content" style={{ backgroundColor: '#dc3545', height: '100%' }}>
         <div className="container-fluid">
           <div className="card card-primary card-outline">
             <div className="card-header"><h3 className="card-title">Seleccione una Máquina</h3></div>

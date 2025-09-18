@@ -1,4 +1,4 @@
-// /src/components/Auth/Login.jsx (Versión Final con Estilos Corregidos)
+// // /src/components/Auth/Login.jsx (Versión Final con Estilos Corregidos)
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +14,6 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // useEffect para gestionar la clase del <body> y asegurar el estilo correcto
   useEffect(() => {
     document.body.classList.add("login-page");
     return () => {
@@ -36,6 +35,11 @@ const Login = () => {
       const data = response.data;
 
       if (data.success && data.token) {
+        // Guardar token y datos del usuario en localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        // Llamar a login del contexto
         login(data.token, data.user);
         
         if (data.user.cambioPassword === 1 || data.user.cambioPassword === true) {
@@ -58,14 +62,11 @@ const Login = () => {
     <div className="login-box">
       <div className="card card-outline card-primary">
         <div className="card-header text-center">
-          {/* Título como en ChangePassword */}
           <a href="#" className="h1"><b>Sintecrom</b></a> 
         </div>
         <div className="card-body">
-          {/* Mensaje de bienvenida */}
           <p className="login-box-msg">Inicia sesión para comenzar</p> 
           <form onSubmit={handleSubmit} autoComplete="off">
-            {/* Input de usuario con ícono */}
             <div className="input-group mb-3">
               <input
                 type="text"
@@ -83,7 +84,6 @@ const Login = () => {
                 </div>
               </div>
             </div>
-            {/* Input de contraseña con ícono */}
             <div className="input-group mb-3">
               <input
                 type="password"
@@ -101,19 +101,17 @@ const Login = () => {
                 </div>
               </div>
             </div>
-            {/* Botón dentro de una fila para ocupar todo el ancho */}
             <div className="row">
-                <div className="col-12">
-                    <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-                    {loading ? (
-                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    ) : (
-                        'Iniciar Sesión'
-                    )}
-                    </button>
-                </div>
+              <div className="col-12">
+                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                  {loading ? (
+                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  ) : (
+                    'Iniciar Sesión'
+                  )}
+                </button>
+              </div>
             </div>
-            {/* Mensaje de error centrado */}
             {error && <p className="text-danger mt-3 text-center">{error}</p>}
           </form>
         </div>

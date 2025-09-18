@@ -60,10 +60,10 @@ const Registracion = () => {
 
     return (
         <>
-            <div className="content-header">
-                <div className="container-fluid"><h1><b>REGISTRACION - Selección de Máquinas</b></h1></div>
+            <div className="content-header" style={{ backgroundColor: '#dc3545' }}>
+                <div className="container-fluid"><h1 style={{ color: '#FFFFFF' }}><b>REGISTRACION - Selección de Máquinas</b></h1></div>
             </div>
-            <div className="content">
+            <div className="content" style={{ backgroundColor: '#dc3545', height: '100%' }}>
                 <div className="container-fluid">
                     <div className="row">
                         {maquinas.SLITTER && renderMachineGroup("SLITTER", maquinas.SLITTER)}
