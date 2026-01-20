@@ -1,0 +1,184 @@
+.print-label-container {
+    width: 15cm; /* Matches RDLC PageWidth */
+    height: 10cm; /* Matches RDLC PageHeight */
+    margin: 0 auto;
+    padding: 0.5cm;
+    font-family: Arial, sans-serif;
+    position: relative;
+    background: white;
+    page-break-after: always;
+}
+
+@media print {
+    body { margin: 0; }
+    .print-label-container { box-shadow: none; }
+    /* Hide unnecessary elements during print */
+}
+
+/* Header Rectangle */
+.label-header {
+    position: absolute;
+    top: 2.2cm;
+    left: 2.2cm;
+    width: 12.58cm;
+    height: 1.51cm;
+    border: 1.5pt solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.5cm;
+}
+
+.logo-sinte {
+    width: 2.84cm;
+    height: 1.33cm;
+}
+
+.barcode {
+    width: 4.39cm;
+    height: 1.45cm;
+}
+
+.nro-etiqueta {
+    position: absolute;
+    top: 0.48cm;
+    left: 3.8cm;
+    width: 2cm;
+    height: 0.6cm;
+    text-align: right;
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+/* Serie/Lote */
+.serie-lote {
+    position: absolute;
+    top: 1.69cm;
+    left: 9.9cm;
+    width: 4.83cm;
+    height: 1.55cm;
+    border: 2pt solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18pt;
+    font-weight: bold;
+}
+
+/* Dimensions Rectangle */
+.dimensions-rect {
+    position: absolute;
+    top: 1.64cm;
+    left: 2.19cm;
+    width: 7.59cm;
+    height: 1.58cm;
+    border: 1.5pt solid black;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+}
+
+.dim-cell {
+    border-right: 1pt solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9pt;
+    height: 0.67cm;
+}
+
+.dim-labels {
+    position: absolute;
+    top: 0.13cm;
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    font-size: 6pt;
+    font-weight: bold;
+}
+
+/* Similar structure for other rectangles (material-rect, op-rect, etc.) - abbreviated for brevity */
+.material-rect {
+    position: absolute;
+    top: 3.32cm;
+    left: 2.16cm;
+    width: 7.6cm;
+    height: 1.54cm;
+    border: 1.5pt solid black;
+    /* Add grid and labels similar to above */
+}
+
+.op-rect {
+    position: absolute;
+    top: 5.04cm;
+    left: 2.16cm;
+    width: 7.61cm;
+    height: 1.56cm;
+    border: 1.5pt solid black;
+    /* Add grid and labels */
+}
+
+.actual-prox-rect {
+    position: absolute;
+    top: 3.33cm;
+    left: 9.92cm;
+    width: 4.82cm;
+    height: 1.53cm;
+    border: 1.5pt solid black;
+    /* Add cells for ACTUAL/PROX */
+}
+
+.atado-rollos-rect {
+    position: absolute;
+    top: 5.04cm;
+    left: 9.95cm;
+    width: 4.82cm;
+    height: 0.82cm;
+    border: 1.5pt solid black;
+    /* Add cells for ATADO/ROLLOS */
+}
+
+.neto-rect {
+    position: absolute;
+    top: 6.76cm;
+    left: 2.14cm;
+    width: 12.6cm;
+    height: 1.63cm;
+    border: 1.5pt solid black;
+    /* Add grid for NETO/UNID/TIPO/CLIENTE/FECHA */
+}
+
+.cod-producto {
+    position: absolute;
+    top: 6cm;
+    left: 9.95cm;
+    width: 4.81cm;
+    font-size: 8pt;
+    text-align: center;
+}
+
+/* Vertical elements */
+.vertical-barcode {
+    position: absolute;
+    top: 0.06cm;
+    left: 0.18cm;
+    height: 3.18cm;
+    width: 1.53cm;
+    writing-mode: vertical-rl;
+    font-size: 36pt;
+    text-orientation: mixed;
+}
+
+.fecha-impre-vertical {
+    position: absolute;
+    top: 3.38cm;
+    left: 0.18cm;
+    height: 4.16cm;
+    width: 0.78cm;
+    writing-mode: vertical-rl;
+    font-size: 11pt;
+    text-orientation: mixed;
+}
+
+/* Lines and borders as per RDLC (use CSS borders) */
+.label-header::after { /* Example line */ content: ''; position: absolute; top: 0; right: 0; height: 100%; width: 1pt; background: black; }

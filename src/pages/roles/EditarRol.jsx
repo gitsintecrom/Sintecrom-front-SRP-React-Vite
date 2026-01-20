@@ -51,6 +51,7 @@ const EditarRol = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Clear previous errors
     if (!nombre) {
       setError('El nombre del rol es requerido.');
       return;
@@ -73,7 +74,65 @@ const EditarRol = () => {
     }
   };
 
-  const customSelectStyles = { /* ... (copia los estilos de CrearUsuario.jsx) ... */ };
+  const customSelectStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      backgroundColor: theme === 'dark' ? '#343a40' : '#fff',
+      borderColor: theme === 'dark' ? '#6c757d' : '#ced4da',
+      color: theme === 'dark' ? '#fff' : '#495057',
+      boxShadow: state.isFocused ? '0 0 0 0.2rem rgba(38,143,255,.25)' : null,
+      '&:hover': {
+        borderColor: theme === 'dark' ? '#6c757d' : '#ced4da',
+      },
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: theme === 'dark' ? '#fff' : '#495057',
+    }),
+    input: (provided) => ({
+      ...provided,
+      color: theme === 'dark' ? '#fff' : '#495057',
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: theme === 'dark' ? '#ced4da' : '#6c757d',
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: theme === 'dark' ? '#343a40' : '#fff',
+      border: `1px solid ${theme === 'dark' ? '#495057' : '#ced4da'}`,
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isFocused
+        ? (theme === 'dark' ? '#007bff' : '#e2e6ea')
+        : (state.isSelected ? (theme === 'dark' ? '#0056b3' : '#007bff') : (theme === 'dark' ? '#343a40' : '#fff')),
+      color: state.isFocused
+        ? (theme === 'dark' ? '#fff' : '#000')
+        : (state.isSelected ? '#fff' : (theme === 'dark' ? '#fff' : '#000')),
+      '&:active': {
+        backgroundColor: theme === 'dark' ? '#0056b3' : '#007bff',
+        color: '#fff',
+      },
+    }),
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: theme === 'dark' ? '#007bff' : '#e9ecef',
+      color: theme === 'dark' ? '#fff' : '#495057',
+    }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      color: theme === 'dark' ? '#fff' : '#495057',
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: theme === 'dark' ? '#fff' : '#495057',
+      '&:hover': {
+        backgroundColor: theme === 'dark' ? '#dc3545' : '#dc3545',
+        color: 'white',
+      },
+    }),
+  };
 
   if (loading) {
     return <div className="content-wrapper d-flex justify-content-center align-items-center"><div className="spinner-border text-primary" role="status"></div></div>;
@@ -88,14 +147,39 @@ const EditarRol = () => {
         <div className="container-fluid">
           <div className="row d-flex justify-content-center">
             <div className="col-md-8">
-              {/* El JSX es idéntico al de CrearRol, solo cambia el texto del botón */}
               <div className="card card-outline card-primary">
                 <div className="card-header"><h3 className="card-title">Modificar Rol: {nombre}</h3></div>
                 <div className="card-body">
                   <form onSubmit={handleSubmit} autoComplete="off">
-                    {/* ... (Copia el contenido del form de CrearRol.jsx) ... */}
+                    <div className="form-group">
+                      <label htmlFor="nombreRol">Nombre del Rol</label>
+                      <input
+                        type="text"
+                        className={`form-control ${theme === 'dark' ? 'bg-dark text-white border-secondary' : ''}`}
+                        id="nombreRol"
+                        placeholder="Ingrese el nombre del rol"
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                        required
+                      />
+                      {error && <small className="text-danger">{error}</small>}
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="permisos">Permisos</label>
+                      <Select
+                        id="permisos"
+                        isMulti
+                        options={permisosOptions}
+                        value={permisosSeleccionados}
+                        onChange={setPermisosSeleccionados}
+                        placeholder="Seleccione uno o más permisos"
+                        classNamePrefix="react-select"
+                        styles={customSelectStyles}
+                        noOptionsMessage={() => "No hay más permisos disponibles"}
+                      />
+                    </div>
                     <div className="d-flex justify-content-between">
-                      <Link to="/roles" className="btn btn-secondary"><i className="fas fa-reply"></i> Volver</Link>
+                      <Link to="/roles/listado" className="btn btn-secondary"><i className="fas fa-reply"></i> Volver</Link>
                       <button type="submit" className="btn btn-primary"><i className="far fa-save"></i> Guardar Cambios</button>
                     </div>
                   </form>

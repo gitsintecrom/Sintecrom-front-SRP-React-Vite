@@ -82,6 +82,7 @@
 /* Clases para controlar la expansión de los elementos */
 .info-field.span-2 {
     grid-column: span 2;
+    font-size: 14px;
 }
 .info-field.span-4 {
     grid-column: span 4;

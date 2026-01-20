@@ -1,0 +1,252 @@
+/* SupervisorReviewModal.css -- FIX FINAL: Compacto máximo, todo visible sin scroll, footer sticky */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+    padding: 5px;
+}
+
+.modal-content {
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    width: 95vw;
+    max-width: 1000px;
+    height: auto; /* FIX: Altura auto para que el contenido determine el tamaño */
+    max-height: 90vh; /* FIX: Máxima altura para no salirse de la pantalla, pero que permita crecer */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* El scroll ahora estará en el modal-body */
+    animation: modalFadeIn 0.3s ease;
+    font-size: 0.75rem;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+    background: #007bff;
+    color: white;
+    padding: 6px 8px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    flex-shrink: 0; /* Asegura que no se encoja */
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-body {
+    flex: 1;
+    padding: 8px;
+    overflow-y: auto; /* FIX: Permite scroll vertical si el contenido es demasiado largo */
+    font-size: 0.75rem;
+    display: flex; /* Para organizar el contenido y el botón de fuerza */
+    flex-direction: column;
+}
+
+.review-grid {
+    display: grid;
+    gap: 4px;
+    /* No establecer altura fija, permitir que el contenido determine su tamaño */
+}
+
+.section {
+    background: white;
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    margin-bottom: 4px;
+}
+
+.section.full-width {
+    grid-column: 1 / -1;
+}
+
+.section h4 {
+    margin: 0 0 4px 0;
+    color: #495057;
+    font-size: 0.8rem;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 2px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 4px;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 1px;
+    color: #495057;
+    font-size: 0.75rem;
+}
+
+.form-group textarea {
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+    padding: 3px;
+    resize: vertical; /* FIX: Permitir resize vertical solo si es necesario, pero con altura mínima */
+    min-height: 25px; /* FIX: Altura mínima para una sola línea */
+    font-size: 0.75rem;
+    line-height: 1.2;
+}
+
+/* Labels Arriba + Texto Checkbox Envuelve */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.checkbox-section {
+    margin-bottom: 4px;
+}
+
+.section-label {
+    display: block;
+    font-weight: bold;
+    color: #495057;
+    font-size: 0.8rem;
+    margin-bottom: 3px;
+    background: #e9ecef;
+    padding: 3px 5px;
+    border-radius: 3px;
+    border-left: 3px solid #007bff;
+}
+
+.checkbox-label {
+    display: inline-flex;
+    align-items: flex-start;
+    cursor: pointer;
+    font-weight: normal;
+    font-size: 0.75rem;
+    padding: 2px 0;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin-right: 5px;
+    margin-top: 1px;
+    transform: scale(1);
+    flex-shrink: 0;
+}
+
+.checkbox-text {
+    flex: 1;
+    line-height: 1.2;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.force-section {
+    text-align: center;
+    margin-top: auto; /* FIX: Empuja el botón hacia abajo si hay espacio, encima del footer */
+    margin-bottom: 8px; /* Espacio entre el botón de fuerza y el footer */
+    flex-shrink: 0; /* Asegura que no se encoja */
+}
+
+.btn-force {
+    background: #ffc107;
+    border: 1px solid #e0a800;
+    color: #212529;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 0.8rem;
+}
+
+.btn-force:hover {
+    background: #e0a800;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    padding: 6px 8px;
+    border-top: 1px solid #dee2e6;
+    background: #f8f9fa;
+    border-radius: 0 0 8px 8px;
+    position: sticky;
+    bottom: 0;
+    flex-shrink: 0; /* Asegura que el footer no se encoja */
+}
+
+.btn {
+    padding: 5px 10px;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* Responsive: En móvil, ultra compacto */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 99vw;
+        max-height: 95vh; /* Aún más altura en móvil para asegurar visibilidad */
+        font-size: 0.7rem;
+    }
+    
+    .checkbox-text {
+        font-size: 0.7rem;
+        line-height: 1.1;
+    }
+    
+    .modal-body {
+        padding: 6px;
+    }
+
+    .form-group textarea {
+        min-height: 20px; /* Reducir aún más en móvil si es necesario */
+    }
+}

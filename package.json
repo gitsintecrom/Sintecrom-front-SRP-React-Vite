@@ -23,6 +23,7 @@
     "axios": "^1.10.0",
     "bootstrap": "^5.3.6",
     "husky": "^9.1.7",
+    "jsbarcode": "^3.12.1",
     "jwt-decode": "^4.0.0",
     "overlayscrollbars": "^2.11.4",
     "react": "^19.1.0",
@@ -31,6 +32,7 @@
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
     "react-select": "^5.10.1",
+    "react-to-print": "^3.2.0",
     "react-tooltip": "^5.29.1",
     "styled-components": "^6.1.19",
     "sweetalert2": "^11.22.0"
