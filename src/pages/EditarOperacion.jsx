@@ -58,6 +58,8 @@ const EditarOperacion = () => {
     const [selectedLinea, setSelectedLinea] = useState(null);
     const operationStatusFromGrid = location.state?.operationStatus;
 
+    const [maquinaNumero, setMaquinaNumero] = useState("");
+
     const fetchData = async () => {
         if (!operacionId) {
             navigate('/registracion');
@@ -70,6 +72,19 @@ const EditarOperacion = () => {
             console.log("operacionId...........", operacionId);
             
             console.log("fetchedData", fetchedData);
+
+            
+            /// Obtener maquinaId del header
+            const maquinaId = fetchedData.header?.maquinaId || "No disponible";
+            console.log("maquinaId del header:", maquinaId);
+
+            // Extraer solo el número después de "SL" (si existe)
+            const maquinaMatch = maquinaId?.match(/^SL(\d+)$/);
+            const maquinaNumeroCalculado = maquinaMatch ? maquinaMatch[1] : "No disponible";
+            console.log("Número de máquina:", maquinaNumeroCalculado);
+            
+            // Guardar el número de máquina en el estado
+            setMaquinaNumero(maquinaNumeroCalculado);
             
             setData(fetchedData);
             setEditedLineas([...fetchedData.lineas]);
@@ -215,6 +230,102 @@ const EditarOperacion = () => {
         }
     };
 
+    const handleCierreClick = async () => {
+        if (!data?.header) return;
+
+        const { header, balance } = data;
+        const { kgsEntrantes, programados, sobreOrden, calidad, sobrante, scrap } = balance;
+
+        // === VALIDACIÓN DE TOLERANCIA (como en VB) ===
+        let toleranciaProg = 0;
+        let totalCierre = 0;
+        let saldoCierre = 0;
+        let totalMerma = 0;
+
+        // Calcular total merma (Scrap Programado)
+        totalMerma = parseFloat(header.ScrapProgramado || 0);
+
+        // Calcular total cierre (suma de todos los valores registrados)
+        totalCierre = parseFloat(sobreOrden || 0) + parseFloat(calidad || 0) + parseFloat(sobrante || 0) + parseFloat(scrap || 0);
+        saldoCierre = parseFloat(kgsEntrantes || 0) - totalCierre;
+
+        // Calcular tolerancia basada en el peso entrante
+        const tolerancia = parseFloat(header.Tolerancia || 0.05); // Si no está definido, usar 5%
+        toleranciaProg = parseFloat(kgsEntrantes || 0) * tolerancia;
+
+        // Validar que el saldo esté dentro de la tolerancia
+        if (Math.abs(saldoCierre) > toleranciaProg) {
+            Swal.fire({
+                title: 'Advertencia',
+                text: `El SALDO debe estar dentro de la TOLERANCIA para efectuar el cierre: ${toleranciaProg.toFixed(2)} kgs.`,
+                icon: 'warning'
+            });
+            return;
+        }
+
+        // === VALIDAR DICTAMEN DE CALIDAD (si hay algo en "Calidad") ===
+        if (parseFloat(calidad || 0) > 0) {
+            // En VB, si hay algo en Calidad, se valida que tenga dictamen.
+            // En nuestro caso, verificamos si hay algún item en "lineas" con Calidad > 0 y sin dictamen.
+            const tieneCalidadSinDictamen = editedLineas.some(linea => {
+                return parseFloat(linea.Calidad || 0) > 0 && !linea.esSobrante && !linea.esScrap;
+            });
+
+            if (tieneCalidadSinDictamen) {
+                Swal.fire({
+                    title: 'Advertencia',
+                    text: 'Hay Items donde falta DICTAMEN de CALIDAD',
+                    icon: 'warning'
+                });
+                return;
+            }
+        }
+
+        // === VALIDAR INSPECCIÓN FINAL (como en VB) ===
+        if (!header.finalRevisado) {
+            Swal.fire({
+                title: 'Advertencia',
+                text: 'Se debe aprobar la INSPECCION FINAL antes de cerrar la operación',
+                icon: 'warning'
+            });
+            return;
+        }
+
+        // === CONFIRMACIÓN DEL USUARIO ===
+        const result = await Swal.fire({
+            title: '¿Confirmar Cierre?',
+            text: 'Se CERRARA la operación. ¿CONFIRMA?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Cerrar',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (!result.isConfirmed) return;
+
+        // === EJECUTAR EL CIERRE ===
+        setModalLoading(true);
+        try {
+            // Llamar a un nuevo endpoint en el backend que haga todo el proceso de cierre
+            console.log('🔵 FRONTEND: URL a llamar:', `/registracion/operaciones/cerrar/${operacionId}`);
+            console.log('🔵 FRONTEND: Body a enviar:', { usuario: 'pmorrone' });
+            const response = await axiosInstance.post(`/registracion/operaciones/cerrar/${operacionId}`, {
+                usuario: 'pmorrone' // Reemplazar por el usuario actual cuando lo tengas
+            });
+
+            await Swal.fire('¡Éxito!', 'Operación cerrada correctamente.', 'success');
+            // Recargar los datos
+            await fetchData();
+            // Redirigir a la grilla de operaciones de la máquina
+            navigate(`/registracion/operaciones/${header.maquinaId}`);
+        } catch (error) {
+            console.error('Error al cerrar operación:', error);
+            Swal.fire('Error', error.response?.data?.error || 'Error al cerrar la operación.', 'error');
+        } finally {
+            setModalLoading(false);
+        }
+    };
+
     if (loading) return <div className="d-flex justify-content-center align-items-center vh-100"><div className="spinner-border text-primary" role="status"></div></div>;
     if (!data) return null;
 
@@ -241,7 +352,7 @@ const EditarOperacion = () => {
             <div className={`detalle-container ${isOperationEditable ? 'editar-mode' : ''}`}>
                 <div className="main-content">
                     <div className="d-flex justify-content-between align-items-center mb-3">
-                        <h1 className="m-0" style={{ color: 'white' }}>REGISTRACION - Editar Operación</h1>
+                        <h1 className="m-0" style={{ color: 'white' }}>REGISTRACION Slitter {maquinaNumero} - Editar Operación</h1>
                         <div className="d-flex align-items-center">
                             {header.maquinaId === 'SL2' && (
                                 <div className="d-flex mr-3">
@@ -301,7 +412,9 @@ const EditarOperacion = () => {
                             <div></div> <div>Programados</div> <div>Sobre Orden</div> <div>Calidad (Suspendido)</div> <div>Atados</div> <div>Rollos</div>
                         </div>
                         <div className="grid-body">
-                            {editedLineas.map((linea, index) => (
+                            {editedLineas
+                                .filter(l => !l.esSobrante && !l.esScrap) 
+                                .map((linea, index) => (
                                 <div
                                     key={index}
                                     className={`grid-row ${!isOperationEditable ? 'disabled-row' : ''}`}
@@ -362,6 +475,7 @@ const EditarOperacion = () => {
                             {[
                                 { 
                                     tipo: 'Sobrante', 
+                                    data: editedLineas.find(l => l.esSobrante) || {},
                                     totalSO: totalSobrante,
                                     totalCal: 0,
                                     totalAtados: 0,
@@ -374,6 +488,7 @@ const EditarOperacion = () => {
                                 },
                                 { 
                                     tipo: 'Scrap Seriado', 
+                                    data: editedLineas.find(l => l.esScrap && l.esScrapSeriado) || {},
                                     totalSO: totalScrapSeriado, 
                                     totalCal: 0,
                                     totalAtados: 0,
@@ -381,6 +496,7 @@ const EditarOperacion = () => {
                                 },
                                 { 
                                     tipo: 'Scrap No Seriado', 
+                                     data: editedLineas.find(l => l.esScrap && l.esScrapNoSeriado) || {},
                                     totalSO: totalScrapNoSeriado, 
                                     totalCal: 0,
                                     totalAtados: 0,
@@ -526,11 +642,13 @@ const EditarOperacion = () => {
                    
                     <button
                         className="btn btn-info btn-block"
-                        onClick={() => navigate(`/registracion/inspeccion/${operacionId}/${header.LoteID}`)}
+                        onClick={() => navigate(`/registracion/inspeccion/${operacionId}/${header.LoteID}`, { 
+                            state: { maquinaNumero: maquinaNumero } // <-- Pasamos el número aquí
+                        })}
                     >
                         Inspección
                     </button>
-                   
+                                    
                     <button
                         className={`btn btn-block ${isSuspended ? 'btn-info' : 'btn-warning'}`}
                         onClick={() => setShowSupervisorModal(true)}
@@ -578,11 +696,14 @@ const EditarOperacion = () => {
                             Existen Notas en CALIPSO
                         </div>
                     )}
+                    {/* Reemplaza el botón de cierre actual */}
                     <div className="cierre-container">
                         <button
                             className="btn btn-success btn-block"
-                            disabled={!isOperationEditable || header.finalRevisado}
+                            disabled={modalLoading} // 👈 SOLO deshabilitado durante la carga
+                            onClick={handleCierreClick} // 👈 Usa la nueva función
                         >
+                            {modalLoading ? <span className="spinner-border spinner-border-sm mr-2"></span> : null}
                             CIERRE
                         </button>
                     </div>

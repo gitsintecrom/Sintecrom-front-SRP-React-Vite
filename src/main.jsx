@@ -28,6 +28,11 @@ const Ingreso = lazy(() => import("./pages/Ingreso"));
 const Comercial = lazy(() => import("./pages/Comercial"));
 const Parametros = lazy(() => import("./pages/Parametros"));
 const Operaciones = lazy(() => import("./pages/Operaciones"));
+// 👇 AÑADE ESTAS TRES LÍNEAS 👇
+const OperacionesSlitter = lazy(() => import("./pages/OperacionesSlitter"));
+const OperacionesEmbalaje = lazy(() => import("./pages/OperacionesEmbalaje"));
+const OperacionesPlancha = lazy(() => import("./pages/OperacionesPlancha"));
+
 const DetalleOperacion = lazy(() => import("./pages/DetalleOperacion")); // 1. Importar el nuevo componente
 const EditarOperacion = lazy(() => import("./pages/EditarOperacion"));
 const InspeccionSlitter = lazy(() => import("./pages/InspeccionSlitter"));
@@ -94,6 +99,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                   <Route path="registracion/inspeccion/:operacionId/:loteId" element={<InspeccionSlitter />} />
                   <Route path="registracion/fichatecnica/:operacionId" element={<FichaTecnica />} />
                   <Route path="registracion/fichatecnica/detalle/:codProd" element={<FichaTecnicaDetalle />} />
+
+                  {/* NUEVAS RUTAS ESPECÍFICAS */}
+                  <Route path="registracion/operaciones/slitter/:maquinaId" element={<OperacionesSlitter />} />
+                  <Route path="registracion/operaciones/embalaje/:maquinaId" element={<OperacionesEmbalaje />} />
+                  <Route path="registracion/operaciones/plancha/:maquinaId" element={<OperacionesPlancha />} />
 
                   <Route path="calidad" element={<Calidad />} />
                   <Route path="ingreso" element={<Ingreso />} />

@@ -20,8 +20,23 @@ const Registracion = () => {
             .finally(() => setLoading(false));
     }, []);
 
+    // const handleMachineClick = (maquinaId) => {
+    //     navigate(`/registracion/operaciones/${maquinaId}`);
+    // };
+
     const handleMachineClick = (maquinaId) => {
-        navigate(`/registracion/operaciones/${maquinaId}`);
+        // Redirigir según el tipo de máquina
+        let routePath = '';
+        if (maquinaId.startsWith('SL')) {
+            routePath = `/registracion/operaciones/slitter/${maquinaId}`;
+        } else if (maquinaId === 'EMB') {
+            routePath = `/registracion/operaciones/embalaje/${maquinaId}`;
+        } else if (maquinaId.startsWith('PL')) {
+            routePath = `/registracion/operaciones/plancha/${maquinaId}`;
+        } else {
+            routePath = `/registracion/operaciones/otros/${maquinaId}`;
+        }
+        navigate(routePath);
     };
 
     const renderMachineGroup = (title, machineList = []) => (

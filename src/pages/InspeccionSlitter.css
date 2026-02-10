@@ -92,3 +92,40 @@
 }
 .inspeccion-table tr:nth-child(even) { background-color: #f8f9fa; }
 .inspeccion-table tbody tr:first-child { font-weight: bold; }
+
+/* Obligamos a que los botones ocupen una fila completa al final de la rejilla */
+.actions-container {
+    grid-column: 1 / -1; /* Esto hace que use todo el ancho de la rejilla */
+    display: flex;
+    justify-content: space-between; /* El verde a la izquierda, el resto a la derecha */
+    align-items: flex-start; /* Alineados por arriba */
+    margin-top: 15px;
+    width: 100%;
+}
+
+/* El grupo de la derecha se mantiene apilado */
+.right-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+/* Botón Subir Cambios (Verde) */
+.subir-cambios-btn {
+    background-color: #28a745 !important;
+    color: white !important;
+    border: 2px outset #ccc !important;
+    font-weight: bold;
+    padding: 6px 15px;
+    height: fit-content;
+}
+
+.subir-cambios-btn:hover {
+    background-color: #218838 !important;
+}
+
+/* Ajuste de márgenes para que 'Supervisor' y 'Subir Cambios' se vean a la misma altura */
+.supervisor-btn {
+    margin-top: 0;
+}
