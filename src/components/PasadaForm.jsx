@@ -12,7 +12,7 @@ const PasadaForm = ({ pasadaNum, pasadaData, totalFlejesHeader, onConfirm, onCan
         aparienciaCaraInferiorIni: false, aparienciaCaraInferior14: false, 
         aparienciaCaraInferior12: false, aparienciaCaraInferior34: false, 
         aparienciaCaraInferiorFin: false, 
-        identificacionBobina: 'C', // 'C' o 'NC'
+        identificacionBobina: 'C',
         anchosDeCorte: [] 
     });
 
@@ -47,20 +47,94 @@ const PasadaForm = ({ pasadaNum, pasadaData, totalFlejesHeader, onConfirm, onCan
         }
     }, [pasadaData, totalFlejesHeader]);
 
+    // ✅ Función mejorada que acepta coma y la convierte en punto
+    const formatNumericValue = (value) => {
+        // Paso 1: Reemplazar TODAS las comas por puntos
+        let formattedValue = value.replace(/,/g, '.');
+        
+        // Paso 2: Eliminar cualquier carácter que no sea dígito o punto
+        formattedValue = formattedValue.replace(/[^0-9.]/g, '');
+        
+        // Paso 3: Asegurar que solo haya un punto decimal
+        const parts = formattedValue.split('.');
+        if (parts.length > 2) {
+            // Si hay más de un punto, mantener solo el primero
+            formattedValue = parts[0] + '.' + parts.slice(1).join('');
+        }
+        
+        // Paso 4: Validar que no sea negativo (eliminar signo menos si existe)
+        formattedValue = formattedValue.replace('-', '');
+        
+        return formattedValue;
+    };
+
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
         
-        if (name.startsWith('ancho')) { 
+        if (name.startsWith('ancho-')) { 
+            // Campos de la grilla de anchos de corte
             const item = parseInt(name.split('-')[1]);
+            const formattedValue = formatNumericValue(value);
             setFormData(prev => ({
                 ...prev,
-                anchosDeCorte: prev.anchosDeCorte.map((a) => a.item === item ? { ...a, valor: value } : a)
+                anchosDeCorte: prev.anchosDeCorte.map((a) => a.item === item ? { ...a, valor: formattedValue } : a)
+            }));
+        } else if (name === 'aparienciaCaraSuperior') {
+            // Campo de texto libre (no numérico)
+            setFormData(prev => ({
+                ...prev,
+                [name]: value
             }));
         } else {
-            // Lógica unificada para inputs, checkboxes y radios
+            // Campos numéricos - aplicar conversión de coma a punto
+            const formattedValue = formatNumericValue(value);
             setFormData(prev => ({
                 ...prev,
-                [name]: type === 'checkbox' ? checked : value
+                [name]: type === 'checkbox' ? checked : formattedValue
+            }));
+        }
+    };
+
+    // ✅ Prevenir teclas no deseadas pero permitir coma y punto
+    const handleKeyDown = (e) => {
+        // Permitir: backspace, delete, tab, escape, enter, home, end, left, right
+        const allowedKeys = [8, 9, 13, 27, 46, 35, 36, 37, 39];
+        
+        if (allowedKeys.includes(e.keyCode)) {
+            return;
+        }
+        
+        // Prevenir el signo menos (-) en todas sus formas
+        if (e.key === '-' || e.keyCode === 189 || e.keyCode === 109) {
+            e.preventDefault();
+            return;
+        }
+        
+        // Permitir dígitos (0-9), punto (.) y coma (,)
+        if (/^[0-9.,]$/.test(e.key)) {
+            return;
+        }
+        
+        // Prevenir cualquier otra tecla
+        e.preventDefault();
+    };
+
+    // ✅ Opcional: Convertir coma a punto también al perder el foco
+    const handleBlur = (e) => {
+        const { name, value } = e.target;
+        
+        if (name.startsWith('ancho-')) {
+            const item = parseInt(name.split('-')[1]);
+            const finalValue = value.replace(/,/g, '.');
+            setFormData(prev => ({
+                ...prev,
+                anchosDeCorte: prev.anchosDeCorte.map((a) => a.item === item ? { ...a, valor: finalValue } : a)
+            }));
+        } else if (name !== 'aparienciaCaraSuperior') {
+            const finalValue = value.replace(/,/g, '.');
+            setFormData(prev => ({
+                ...prev,
+                [name]: finalValue
             }));
         }
     };
@@ -79,10 +153,16 @@ const PasadaForm = ({ pasadaNum, pasadaData, totalFlejesHeader, onConfirm, onCan
                                     <tr key={ancho.item}>
                                         <td>{index + 1}</td>
                                         <td>
-                                            <input type="text" value={ancho.valor} 
+                                            <input 
+                                                type="text" 
+                                                inputMode="decimal"
+                                                value={ancho.valor} 
                                                 name={`ancho-${ancho.item}`}
                                                 onChange={handleInputChange}
-                                                className="form-control" />
+                                                onKeyDown={handleKeyDown}
+                                                onBlur={handleBlur}
+                                                className="form-control" 
+                                            />
                                         </td>
                                     </tr>
                                 ))}
@@ -97,22 +177,54 @@ const PasadaForm = ({ pasadaNum, pasadaData, totalFlejesHeader, onConfirm, onCan
                         <label>Espesor (mm)</label>
                         <div className="input-row">
                             <label>B.L.M.:</label>
-                            <input type="text" name="espesorBLM" value={formData.espesorBLM} onChange={handleInputChange} />
+                            <input 
+                                type="text" 
+                                inputMode="decimal"
+                                name="espesorBLM" 
+                                value={formData.espesorBLM} 
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                                onBlur={handleBlur}
+                            />
                         </div>
                         <div className="input-row">
                             <label>C.:</label>
-                            <input type="text" name="espesorC" value={formData.espesorC} onChange={handleInputChange} />
+                            <input 
+                                type="text" 
+                                inputMode="decimal"
+                                name="espesorC" 
+                                value={formData.espesorC} 
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                                onBlur={handleBlur}
+                            />
                         </div>
                         <div className="input-row">
                             <label>B.L.O.:</label>
-                            <input type="text" name="espesorBLO" value={formData.espesorBLO} onChange={handleInputChange} />
+                            <input 
+                                type="text" 
+                                inputMode="decimal"
+                                name="espesorBLO" 
+                                value={formData.espesorBLO} 
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                                onBlur={handleBlur}
+                            />
                         </div>
                     </div>
 
                     <div className="form-group-box diametro-interno">
                         <div className="input-row">
                             <label>Diámetro INTERNO:</label>
-                            <input type="text" name="diametroInterno" value={formData.diametroInterno} onChange={handleInputChange} />
+                            <input 
+                                type="text" 
+                                inputMode="numeric"
+                                name="diametroInterno" 
+                                value={formData.diametroInterno} 
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                                onBlur={handleBlur}
+                            />
                         </div>
                     </div>
 
@@ -120,7 +232,12 @@ const PasadaForm = ({ pasadaNum, pasadaData, totalFlejesHeader, onConfirm, onCan
                         <label>Apariencia</label>
                         <div className="input-row">
                             <label>Cara Superior:</label>
-                            <textarea name="aparienciaCaraSuperior" rows="2" value={formData.aparienciaCaraSuperior} onChange={handleInputChange} />
+                            <textarea 
+                                name="aparienciaCaraSuperior" 
+                                rows="2" 
+                                value={formData.aparienciaCaraSuperior} 
+                                onChange={handleInputChange} 
+                            />
                         </div>
                         <div className="apariencia-inferior">
                             <label>Cara Inferior (para Freezer):</label>
@@ -162,7 +279,15 @@ const PasadaForm = ({ pasadaNum, pasadaData, totalFlejesHeader, onConfirm, onCan
                     <div className="form-group-box ancho-bobina">
                         <div className="input-row">
                             <label>Ancho de Bobina (mm):</label>
-                            <input type="text" name="anchoRealBobina" value={formData.anchoRealBobina} onChange={handleInputChange} />
+                            <input 
+                                type="text" 
+                                inputMode="numeric"
+                                name="anchoRealBobina" 
+                                value={formData.anchoRealBobina} 
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                                onBlur={handleBlur}
+                            />
                         </div>
                     </div>
                 </div>
@@ -174,15 +299,39 @@ const PasadaForm = ({ pasadaNum, pasadaData, totalFlejesHeader, onConfirm, onCan
                         <label>FINAL PASADA</label>
                         <div className="input-row">
                             <label>Diámetro EXTERNO:</label>
-                            <input type="text" name="diametroExterno" value={formData.diametroExterno} onChange={handleInputChange} />
+                            <input 
+                                type="text" 
+                                inputMode="numeric"
+                                name="diametroExterno" 
+                                value={formData.diametroExterno} 
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                                onBlur={handleBlur}
+                            />
                         </div>
                         <div className="input-row">
                             <label>Despl. Espiras(mm):</label>
-                            <input type="text" name="desplazamientoEspiras" value={formData.desplazamientoEspiras} onChange={handleInputChange} />
+                            <input 
+                                type="text" 
+                                inputMode="numeric"
+                                name="desplazamientoEspiras" 
+                                value={formData.desplazamientoEspiras} 
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                                onBlur={handleBlur}
+                            />
                         </div>
                         <div className="input-row">
                             <label>CAMBER (mm/m):</label>
-                            <input type="text" name="camber" value={formData.camber} onChange={handleInputChange} />
+                            <input 
+                                type="text" 
+                                inputMode="decimal"
+                                name="camber" 
+                                value={formData.camber} 
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                                onBlur={handleBlur}
+                            />
                         </div>
                     </div>
                     <div className="form-actions">

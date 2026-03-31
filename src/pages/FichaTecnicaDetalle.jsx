@@ -141,36 +141,37 @@ const FichaTecnicaDetalle = () => {
                         </div>
                     </Tab>
                     <Tab eventKey="tolerancias" title="Tolerancias">
-                         <div className="tab-grid tolerancias-grid">
+                        <div className="tab-grid tolerancias-grid">
                             <div className="grid-header"></div>
-                            <div className="grid-header"><strong>Máximo</strong></div>
+                            {/* Invertimos el orden: primero Mínimo, luego Máximo */}
                             <div className="grid-header"><strong>Mínimo</strong></div>
+                            <div className="grid-header"><strong>Máximo</strong></div>
 
                             <div className="grid-label"><strong>Espesor (mm):</strong></div>
-                            <div>{detalle.EspesorMax}</div>
                             <div>{detalle.EspesorMin}</div>
+                            <div>{detalle.EspesorMax}</div>
 
                             <div className="grid-label"><strong>Ancho (mm):</strong></div>
-                            <div>{detalle.AnchoMax}</div>
                             <div>{detalle.AnchoMin}</div>
+                            <div>{detalle.AnchoMax}</div>
 
                             <div className="grid-label"><strong>Largo (mm):</strong></div>
-                            <div>{detalle.LargoMax}</div>
                             <div>{detalle.LargoMin}</div>
+                            <div>{detalle.LargoMax}</div>
                             
                             <div className="grid-label"><strong>Diámetro Ext:</strong></div>
-                            <div>{detalle.DiamExtMax}</div>
                             <div>{detalle.DiamExtMin}</div>
+                            <div>{detalle.DiamExtMax}</div>
                             
                             <div className="grid-label"><strong>Kg. x rollo:</strong></div>
-                            <div>{detalle.PesoRMax}</div>
                             <div>{detalle.PesoRMin}</div>
+                            <div>{detalle.PesoRMax}</div>
 
                             <div className="grid-label"><strong>Cant.hojas x paquete:</strong></div>
+                            <div>{detalle.CMHPP}</div>
                             <div>{detalle.CHPP}</div>
-                             <div>{detalle.CMHPP}</div>
                         </div>
-                         <div className="tab-grid additional-tolerances">
+                        <div className="tab-grid additional-tolerances">
                             <InfoField label="Curv.lat. (sable - mm/m)" value={detalle.Sable} />
                             <InfoField label="Tipo de empalme" value={detalle.TipoEmpalme} />
                             <InfoField label="Desp.de espiras (mm)" value={detalle.Espiras} />

@@ -1,0 +1,289 @@
+/* --- LAYOUT BASE --- */
+.slitter-container {
+    background-color: #9da3a9;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.slitter-header {
+    background-color: #4b5d6a;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.slitter-header h1 { font-size: 20px; margin: 0; font-weight: bold; }
+.back-link { background: none; border: none; color: white; cursor: pointer; font-size: 13px; }
+
+.slitter-layout { display: flex; }
+.slitter-main-content { flex: 1; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+
+/* --- BLOQUES SUPERIORES GRISES --- */
+.slitter-top-info { display: flex; gap: 15px; }
+
+.client-info-box {
+    background-color: #d1d5d9;
+    flex: 1;
+    border: 1px solid #888;
+    padding: 15px;
+}
+
+.info-grid-main {
+    display: flex;
+    justify-content: space-between;
+}
+
+.client-info-box p { margin: 4px 0; font-size: 13px; }
+
+.blue-counter {
+    color: #0000ff;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* RECUADRO ENTRANTE */
+.slitter-entrante-box {
+    width: 380px;
+    background-color: #d1d5d9;
+    border: 1px solid #888;
+}
+
+.box-header {
+    background-color: #5d6d7e;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.box-body {
+    padding: 8px;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.box-row {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.box-row span {
+    font-weight: bold;
+    font-style: italic;
+    width: 110px;
+    display: inline-block;
+}
+
+.blue-cod-text-box {
+    color: blue;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 5px;
+    font-size: 12px;
+    border-top: 1px solid #aaa;
+    padding-top: 3px;
+}
+
+.slitter-middle-bar {
+    background-color: #e9ecef;
+    border: 1px solid #adb5bd;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* --- GRILLA ORIGINAL CAJAS CREMA --- */
+.grid-header-labels {
+    display: grid;
+    grid-template-columns: 220px repeat(6, 120px);
+    gap: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.production-row-block {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.row-left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 220px;
+}
+
+.pedido-card-crema {
+    background-color: #fffdec;
+    border: 1px solid #999;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+.scrap-btn-row { display: flex; gap: 5px; }
+
+.btn-scrap-crema {
+    background-color: #fffdec;
+    border: 1px solid #999;
+    flex: 1;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.row-right-values { display: flex; flex-direction: column; gap: 15px; }
+
+.values-line { display: grid; grid-template-columns: repeat(6, 120px); gap: 10px; }
+
+.val-box-crema {
+    background-color: #fffdec;
+    border: 1px solid #999;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.big-text { font-size: 24px; height: 50px; }
+.transparent { background-color: transparent !important; border: none !important; box-shadow: none !important; }
+.sub-row .val-box-crema { height: 32px; font-size: 15px; }
+
+/* --- SIDEBAR --- */
+.slitter-sidebar {
+    width: 170px;
+    background-color: #6c757d;
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 100vh;
+}
+
+.side-btns-group { display: flex; flex-direction: column; gap: 12px; }
+
+.side-btn {
+    border-radius: 8px;
+    border: 1px solid #adb5bd;
+    padding: 12px 5px;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    background-color: #e9ecef;
+}
+
+/* CARTEL ROJO ESTILO IMAGEN 1 */
+.side-red-alert-box {
+    background-color: #dc3545;
+    color: white;
+    padding: 15px 5px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 1.3;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.btn-green-cierre {
+    background-color: #198754 !important;
+    color: white !important;
+    margin-top: auto;
+    border: none !important;
+}
+
+/* --- BALANCE INFERIOR EN BARRA --- */
+.slitter-balance-footer {
+    background-color: #adb5bd;
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+    border-radius: 4px;
+    margin-top: auto;
+}
+
+.bal-col { text-align: center; }
+.bal-col span { display: block; font-size: 11px; font-weight: bold; color: #444; }
+.bal-col strong { font-size: 15px; }
+.blue-saldo-text { color: #0056b3; }
+
+.loading-screen { background: #9da3a9; height: 100vh; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+
+/* ... (el resto del CSS anterior se mantiene igual) ... */
+
+.slitter-sidebar {
+    width: 170px;
+    background-color: #6c757d;
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 100vh;
+}
+
+.side-btns-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.side-btn {
+    border-radius: 8px;
+    border: 1px solid #adb5bd;
+    padding: 12px 5px;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    background-color: #e9ecef;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* EL CARTEL ROJO DE LA IMAGEN 1 */
+.side-red-alert-box {
+    background-color: #dc3545; /* Rojo vivo */
+    color: white;
+    padding: 15px 5px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 1.3;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    margin-top: 5px;
+}
+
+.blue-counter {
+    color: #0000ff;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+
+/* Añade esto a tu EditarOperacionEmbalaje.css */
+
+.side-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f1f1f1;
+    color: #888;
+    box-shadow: none;
+}
