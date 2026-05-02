@@ -168,3 +168,48 @@
     color: #888888 !important;
     border-color: #ddd !important;
 }
+
+/* Input con fondo gris claro cuando está bloqueado */
+.grid-cell-input.input-bloqueado {
+    background-color: #e8e4d9 !important;
+    border-color: #d4c9a8 !important;
+    opacity: 0.7 !important;
+    color: #333 !important;
+}
+
+/* Asegurar que el texto dentro del input se vea bien */
+.grid-cell-input.input-bloqueado::placeholder {
+    color: #666 !important;
+}
+
+
+
+
+
+/* ===== ESTILOS PARA INPUTS BLOQUEADOS ===== */
+/* Cuando el input está deshabilitado (bloqueado) */
+.detalle-container .grid-body .grid-row .grid-cell-input:disabled,
+.detalle-container .grid-body .grid-row input.grid-cell-input:disabled {
+    background-color: #e8e4d9 !important;
+    border-color: #d4c9a8 !important;
+    color: #a0a0a0 !important;  /* Texto gris claro */
+    -webkit-text-fill-color: #a0a0a0 !important;
+    opacity: 1 !important;
+}
+
+/* ===== ESTILOS PARA INPUTS NO BLOQUEADOS ===== */
+/* Cuando el input NO está deshabilitado (editable) */
+.detalle-container .grid-body .grid-row .grid-cell-input:not(:disabled),
+.detalle-container .grid-body .grid-row input.grid-cell-input:not(:disabled) {
+    background-color: #ffffff !important;  /* Fondo blanco */
+    border-color: #ced4da !important;
+    color: #000000 !important;  /* Texto NEGRO */
+    -webkit-text-fill-color: #000000 !important;
+    opacity: 1 !important;
+}
+
+/* Mantener el estilo de los boxes (amarillo siempre, sin cambios) */
+.grid-cell-desc {
+    background-color: #f0e68c !important;
+    color: black !important;
+}

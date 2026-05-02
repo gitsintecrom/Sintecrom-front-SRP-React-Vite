@@ -271,36 +271,36 @@ const DetalleOperacion = () => {
                                         <div>{linea.Destino ? linea.Destino.substring(0, 11) : 'N/A'}</div>
                                         <div>Atados: {linea.Atados} Rollos: {linea.Rollos}</div>
                                     </div>
-                                    <input type="text" className="form-control grid-cell-input" readOnly value={formatNumber(linea.Programados)} />
-                                    <input type="text" className="form-control grid-cell-input" readOnly value={formatNumber(linea.SobreOrden)} />
-                                    <input type="text" className="form-control grid-cell-input" readOnly value={formatNumber(linea.Calidad)} />
-                                    <input type="text" className="form-control grid-cell-input" readOnly value={formatNumber(linea.TotAtados)} />
-                                    <input type="text" className="form-control grid-cell-input" readOnly value={formatNumber(linea.TotRollos)} />
+                                    <input type="text" className="form-control grid-cell-input" readOnly value={formatNumber(linea.Programados)} disabled />
+                                    <input type="text" className="form-control grid-cell-input" readOnly value={formatNumber(linea.SobreOrden)} disabled />
+                                    <input type="text" className="form-control grid-cell-input" readOnly value={formatNumber(linea.Calidad)} disabled />
+                                    <input type="text" className="form-control grid-cell-input" readOnly value={formatNumber(linea.TotAtados)} disabled />
+                                    <input type="text" className="form-control grid-cell-input" readOnly value={formatNumber(linea.TotRollos)} disabled />
                                 </div>
                             ))}
                             <div className="grid-row">
                                 <div className="grid-cell-desc font-weight-bold">Sobrante</div>
                                 <div className="grid-cell-placeholder"></div>
-                                <input type="text" className="form-control grid-cell-input" readOnly value="0" />
-                                <input type="text" className="form-control grid-cell-input" readOnly value="0" />
-                                <input type="text" className="form-control grid-cell-input" readOnly value="0" />
-                                <input type="text" className="form-control grid-cell-input" readOnly value="0" />
+                                <input type="text" className="form-control grid-cell-input" readOnly value="0" disabled />
+                                <input type="text" className="form-control grid-cell-input" readOnly value="0" disabled />
+                                <input type="text" className="form-control grid-cell-input" readOnly value="0" disabled />
+                                <input type="text" className="form-control grid-cell-input" readOnly value="0" disabled />
                             </div>
                             <div className="grid-row">
                                 <div className="grid-cell-desc font-weight-bold">Scrap Seriado</div>
                                 <div className="grid-cell-placeholder"></div>
-                                <input type="text" className="form-control grid-cell-input" readOnly value="0" />
-                                <input type="text" className="form-control grid-cell-input" readOnly value="0" />
-                                <input type="text" className="form-control grid-cell-input" readOnly value="0" />
-                                <input type="text" className="form-control grid-cell-input" readOnly value="0" />
+                                <input type="text" className="form-control grid-cell-input" readOnly value="0" disabled />
+                                <input type="text" className="form-control grid-cell-input" readOnly value="0" disabled />
+                                <input type="text" className="form-control grid-cell-input" readOnly value="0" disabled />
+                                <input type="text" className="form-control grid-cell-input" readOnly value="0" disabled />
                             </div>
                             <div className="grid-row">
                                 <div className="grid-cell-desc font-weight-bold">Scrap No Seriado</div>
                                 <div className="grid-cell-placeholder"></div>
-                                <input type="text" className="form-control grid-cell-input" readOnly value="0" />
-                                <input type="text" className="form-control grid-cell-input" readOnly value="0" />
-                                <input type="text" className="form-control grid-cell-input" readOnly value="0" />
-                                <input type="text" className="form-control grid-cell-input" readOnly value="0" />
+                                <input type="text" className="form-control grid-cell-input" readOnly value="0" disabled />
+                                <input type="text" className="form-control grid-cell-input" readOnly value="0" disabled />
+                                <input type="text" className="form-control grid-cell-input" readOnly value="0" disabled />
+                                <input type="text" className="form-control grid-cell-input" readOnly value="0" disabled />
                             </div>
                         </div>
                         

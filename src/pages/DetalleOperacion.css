@@ -71,7 +71,7 @@
 }
 .detalle-container .grid-cell-desc {
     background-color: #f0e68c; /* Fondo amarillo */
-    color: #888888; /* Texto gris claro */
+    color: #888888 !important;/* Texto gris claro */
     padding: 0.5rem;
     border-radius: 4px;
     font-weight: bold;
