@@ -160,13 +160,124 @@ const EditarOperacion = () => {
         finally { setModalLoading(false); }
     };
 
-    // ✅ VALIDACIONES DEL VB.NET PARA EL CIERRE
+    // ✅ VALIDACIONES DEL VB.NET PARA EL CIERRE - CORREGIDO
+    // const validarCierreVB = async () => {
+    //     if (!data || !data.lineas || !data.balance) {
+    //         return { valido: false, mensajes: [], requiereSupervisor: false };
+    //     }
+
+    //     const TOLERANCIA_GENERAL = 0.05; // 5% - igual que VB.NET
+    //     const TOLERANCIA_INDIVIDUAL = 0.35; // 35% - igual que VB.NET
+        
+    //     let mensajesError = [];
+    //     let hayFueraTolerancia = false;
+    //     let faltaDictamenCalidad = false;
+    //     let requiereSupervisor = false;
+
+    //     // === VALIDAR CADA LÍNEA NORMAL (como en VB.NET) ===
+    //     for (const linea of data.lineas) {
+    //         if (linea.esSobrante || linea.esScrap) continue;
+
+    //         const programados = parseFloat(linea.Programados) || 0;
+    //         const sobreOrden = parseFloat(linea.SobreOrden) || 0;
+    //         const calidad = parseFloat(linea.Calidad) || 0;
+    //         const totalRegistrado = sobreOrden + calidad;
+
+    //         // Calcular tolerancia programada (mínimo 2 kg) - IGUAL QUE VB.NET
+    //         let toleranciaProg = programados * TOLERANCIA_GENERAL;
+    //         if (toleranciaProg < 2) toleranciaProg = 2;
+
+    //         // Verificar si está fuera de tolerancia general
+    //         const diferencia = Math.abs(totalRegistrado - programados);
+    //         if (diferencia > toleranciaProg) {
+    //             hayFueraTolerancia = true;
+    //             mensajesError.push(`Fuera Tolerancia en Serie/Lote ${linea.Destino || linea.SerieLote}`);
+    //         }
+
+    //         // Verificar tolerancia individual (35%) - IGUAL QUE VB.NET
+    //         let toleranciaInd = programados * TOLERANCIA_INDIVIDUAL;
+    //         if (toleranciaInd < 2) toleranciaInd = 2;
+    //         if (diferencia > toleranciaInd) {
+    //             requiereSupervisor = true;
+    //         }
+
+    //         // Verificar si está en calidad sin dictamen
+    //         if (calidad > 0 && !linea.dictamen) {
+    //             faltaDictamenCalidad = true;
+    //             mensajesError.push(`${linea.Destino || linea.SerieLote} - FALTA DICTAMEN DE CALIDAD`);
+    //         }
+    //     }
+
+    //     // === VALIDAR SOBRANTES ===
+    //     const lineasSobrante = data.lineas.filter(l => l.esSobrante);
+    //     for (const sobrante of lineasSobrante) {
+    //         const calidadSobrante = parseFloat(sobrante.Calidad) || 0;
+    //         if (calidadSobrante > 0) {
+    //             requiereSupervisor = false;
+    //             faltaDictamenCalidad = true;
+    //             mensajesError.push("Sobrante - FALTA DICTAMEN DE CALIDAD");
+    //         }
+    //     }
+
+    //     // === VALIDAR SCRAP ===
+    //     const lineasScrap = data.lineas.filter(l => l.esScrap);
+    //     for (const scrap of lineasScrap) {
+    //         const calidadScrap = parseFloat(scrap.Calidad) || 0;
+    //         if (calidadScrap > 0) {
+    //             faltaDictamenCalidad = true;
+    //             mensajesError.push("Scrap - FALTA DICTAMEN DE CALIDAD");
+    //         }
+    //     }
+
+    //     // === VALIDAR SALDO TOTAL - CORRECCIÓN CLAVE ===
+    //     const kgsEntrantes = parseFloat(data.balance.kgsEntrantes) || 0;
+    //     const sobreOrdenTotal = parseFloat(data.balance.sobreOrden) || 0;
+    //     const calidadTotal = parseFloat(data.balance.calidad) || 0;
+    //     const sobranteTotal = parseFloat(data.balance.sobrante) || 0;
+    //     const scrapTotal = parseFloat(data.balance.scrap) || 0;
+        
+    //     const saldo = kgsEntrantes - sobreOrdenTotal - calidadTotal - sobranteTotal - scrapTotal;
+    //     const saldoAbsoluto = Math.abs(saldo);
+        
+    //     // ✅ CORRECCIÓN: La tolerancia se calcula sobre el saldo absoluto, no sobre kgsEntrantes
+    //     // Y con formato de 2 decimales siempre
+    //     let toleranciaSaldo = saldoAbsoluto * TOLERANCIA_GENERAL;
+    //     if (toleranciaSaldo < 2) toleranciaSaldo = 2;
+        
+    //     // Formatear con 2 decimales exactos
+    //     const toleranciaSaldoFormatted = toleranciaSaldo.toFixed(2).replace('.', ',');
+        
+    //     if (saldoAbsoluto > toleranciaSaldo) {
+    //         hayFueraTolerancia = true;
+    //         mensajesError.push(`El SALDO DEBE estar dentro de la TOLERANCIA para efectuar el cierre: ${toleranciaSaldoFormatted} kgs.`);
+    //     }
+
+    //     // === RESULTADO ===
+    //     if (mensajesError.length > 0) {
+    //         return {
+    //             valido: false,
+    //             requiereSupervisor,
+    //             mensajes: mensajesError,
+    //             saldo: saldo.toFixed(2),
+    //             toleranciaSaldo: toleranciaSaldo.toFixed(2)
+    //         };
+    //     }
+
+    //     return {
+    //         valido: true,
+    //         requiereSupervisor,
+    //         mensajes: [],
+    //         saldo: saldo.toFixed(2)
+    //     };
+    // };
+
+    // ✅ VALIDACIONES DEL VB.NET PARA EL CIERRE - CORREGIDO
     const validarCierreVB = async () => {
         if (!data || !data.lineas || !data.balance) {
             return { valido: false, mensajes: [], requiereSupervisor: false };
         }
 
-        const TOLERANCIA_GENERAL = 0.05; // 5% - igual que VB.NET
+        const TOLERANCIA_GENERAL = 0.005; // 0.5% - igual que VB.NET (Inicial.dTolerancia)
         const TOLERANCIA_INDIVIDUAL = 0.35; // 35% - igual que VB.NET
         
         let mensajesError = [];
@@ -201,28 +312,25 @@ const EditarOperacion = () => {
                 requiereSupervisor = true;
             }
 
-            // Verificar si está en calidad sin dictamen (sEstaEnCalidad == "1" en VB.NET)
-            // Simulamos: si hay algo en Calidad y no está "dictaminado"
+            // Verificar si está en calidad sin dictamen
             if (calidad > 0 && !linea.dictamen) {
                 faltaDictamenCalidad = true;
                 mensajesError.push(`${linea.Destino || linea.SerieLote} - FALTA DICTAMEN DE CALIDAD`);
             }
         }
 
-        // === VALIDAR SOBRANTES (como en VB.NET) ===
+        // === VALIDAR SOBRANTES ===
         const lineasSobrante = data.lineas.filter(l => l.esSobrante);
         for (const sobrante of lineasSobrante) {
-            // En VB.NET: si dgSobrantes.Rows[j].Cells["EnCalidadItem"].Value == "1"
-            // Simulamos: si hay kilos en calidad en sobrante, NO validar el 35%
             const calidadSobrante = parseFloat(sobrante.Calidad) || 0;
             if (calidadSobrante > 0) {
-                requiereSupervisor = false; // Si tiene calidad, no valida 35%
+                requiereSupervisor = false;
                 faltaDictamenCalidad = true;
                 mensajesError.push("Sobrante - FALTA DICTAMEN DE CALIDAD");
             }
         }
 
-        // === VALIDAR SCRAP (como en VB.NET) ===
+        // === VALIDAR SCRAP ===
         const lineasScrap = data.lineas.filter(l => l.esScrap);
         for (const scrap of lineasScrap) {
             const calidadScrap = parseFloat(scrap.Calidad) || 0;
@@ -232,7 +340,7 @@ const EditarOperacion = () => {
             }
         }
 
-        // === VALIDAR SALDO TOTAL (como en VB.NET Cierro()) ===
+        // === VALIDAR SALDO TOTAL - CORRECCIÓN CLAVE ===
         const kgsEntrantes = parseFloat(data.balance.kgsEntrantes) || 0;
         const sobreOrdenTotal = parseFloat(data.balance.sobreOrden) || 0;
         const calidadTotal = parseFloat(data.balance.calidad) || 0;
@@ -240,22 +348,29 @@ const EditarOperacion = () => {
         const scrapTotal = parseFloat(data.balance.scrap) || 0;
         
         const saldo = kgsEntrantes - sobreOrdenTotal - calidadTotal - sobranteTotal - scrapTotal;
+        const saldoAbsoluto = Math.abs(saldo);
+        
+        // ✅ CORRECCIÓN: La tolerancia se calcula sobre kgsEntrantes (como en VB.NET)
+        // NO sobre el saldo absoluto
         let toleranciaSaldo = kgsEntrantes * TOLERANCIA_GENERAL;
         if (toleranciaSaldo < 2) toleranciaSaldo = 2;
         
-        if (Math.abs(saldo) > toleranciaSaldo) {
+        // Formatear con 2 decimales exactos
+        const toleranciaSaldoFormatted = toleranciaSaldo.toFixed(2).replace('.', ',');
+        
+        if (saldoAbsoluto > toleranciaSaldo) {
             hayFueraTolerancia = true;
-            mensajesError.push(`El SALDO DEBE estar dentro de la TOLERANCIA para efectuar el cierre: ${toleranciaSaldo.toFixed(3)} kgs.`);
+            mensajesError.push(`El SALDO DEBE estar dentro de la TOLERANCIA para efectuar el cierre: ${toleranciaSaldoFormatted} kgs.`);
         }
 
-        // === RESULTADO (como en VB.NET) ===
+        // === RESULTADO ===
         if (mensajesError.length > 0) {
             return {
                 valido: false,
                 requiereSupervisor,
                 mensajes: mensajesError,
-                saldo: saldo.toFixed(3),
-                toleranciaSaldo: toleranciaSaldo.toFixed(3)
+                saldo: saldo.toFixed(2),
+                toleranciaSaldo: toleranciaSaldo.toFixed(2)
             };
         }
 
@@ -263,7 +378,7 @@ const EditarOperacion = () => {
             valido: true,
             requiereSupervisor,
             mensajes: [],
-            saldo: saldo.toFixed(3)
+            saldo: saldo.toFixed(2)
         };
     };
 
