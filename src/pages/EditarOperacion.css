@@ -213,3 +213,26 @@
     background-color: #f0e68c !important;
     color: black !important;
 }
+
+/* Spinner en botón de cierre */
+.btn-cierre-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+.btn-cierre-loading .fa-spinner {
+    animation: fa-spin 1s infinite linear;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Asegurar que el texto no salte */
+.btn-cierre-loading span {
+    vertical-align: middle;
+}

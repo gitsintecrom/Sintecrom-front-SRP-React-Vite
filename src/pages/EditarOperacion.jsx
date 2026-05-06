@@ -643,10 +643,9 @@ const EditarOperacion = () => {
                              "⚠️ Complete todas las pasadas"}
                         </div>
                     )}
-                    
                     <div className="cierre-container">
                         <button 
-                            className="btn btn-success btn-block" 
+                            className={`btn btn-success btn-block ${modalLoading ? 'btn-cierre-loading' : ''}`} 
                             onClick={handleCierreClick}
                             disabled={!canEditOperacion || modalLoading}
                             title={!canEditOperacion ? 
@@ -654,7 +653,7 @@ const EditarOperacion = () => {
                                 !inspeccionData.header?.inicioRevisado ? "Debe revisar el inicio en Inspección" : 
                                 "Complete todos los datos de las pasadas") : 
                                 "Cerrar operación"}
-                            style={!canEditOperacion ? {
+                            style={!canEditOperacion && !modalLoading ? {
                                 backgroundColor: '#6c757d',
                                 borderColor: '#6c757d',
                                 cursor: 'not-allowed',
@@ -664,7 +663,7 @@ const EditarOperacion = () => {
                             {modalLoading ? (
                                 <>
                                     <i className="fas fa-spinner fa-spin mr-2"></i>
-                                    Cerrando...
+                                    <span>Cerrando...</span>
                                 </>
                             ) : (
                                 'CIERRE'
