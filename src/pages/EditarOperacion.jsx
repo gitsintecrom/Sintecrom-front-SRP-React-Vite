@@ -160,18 +160,192 @@ const EditarOperacion = () => {
         finally { setModalLoading(false); }
     };
 
+    // ✅ VALIDACIONES DEL VB.NET PARA EL CIERRE
+    const validarCierreVB = async () => {
+        if (!data || !data.lineas || !data.balance) {
+            return { valido: false, mensajes: [], requiereSupervisor: false };
+        }
+
+        const TOLERANCIA_GENERAL = 0.05; // 5% - igual que VB.NET
+        const TOLERANCIA_INDIVIDUAL = 0.35; // 35% - igual que VB.NET
+        
+        let mensajesError = [];
+        let hayFueraTolerancia = false;
+        let faltaDictamenCalidad = false;
+        let requiereSupervisor = false;
+
+        // === VALIDAR CADA LÍNEA NORMAL (como en VB.NET) ===
+        for (const linea of data.lineas) {
+            if (linea.esSobrante || linea.esScrap) continue;
+
+            const programados = parseFloat(linea.Programados) || 0;
+            const sobreOrden = parseFloat(linea.SobreOrden) || 0;
+            const calidad = parseFloat(linea.Calidad) || 0;
+            const totalRegistrado = sobreOrden + calidad;
+
+            // Calcular tolerancia programada (mínimo 2 kg) - IGUAL QUE VB.NET
+            let toleranciaProg = programados * TOLERANCIA_GENERAL;
+            if (toleranciaProg < 2) toleranciaProg = 2;
+
+            // Verificar si está fuera de tolerancia general
+            const diferencia = Math.abs(totalRegistrado - programados);
+            if (diferencia > toleranciaProg) {
+                hayFueraTolerancia = true;
+                mensajesError.push(`Fuera Tolerancia en Serie/Lote ${linea.Destino || linea.SerieLote}`);
+            }
+
+            // Verificar tolerancia individual (35%) - IGUAL QUE VB.NET
+            let toleranciaInd = programados * TOLERANCIA_INDIVIDUAL;
+            if (toleranciaInd < 2) toleranciaInd = 2;
+            if (diferencia > toleranciaInd) {
+                requiereSupervisor = true;
+            }
+
+            // Verificar si está en calidad sin dictamen (sEstaEnCalidad == "1" en VB.NET)
+            // Simulamos: si hay algo en Calidad y no está "dictaminado"
+            if (calidad > 0 && !linea.dictamen) {
+                faltaDictamenCalidad = true;
+                mensajesError.push(`${linea.Destino || linea.SerieLote} - FALTA DICTAMEN DE CALIDAD`);
+            }
+        }
+
+        // === VALIDAR SOBRANTES (como en VB.NET) ===
+        const lineasSobrante = data.lineas.filter(l => l.esSobrante);
+        for (const sobrante of lineasSobrante) {
+            // En VB.NET: si dgSobrantes.Rows[j].Cells["EnCalidadItem"].Value == "1"
+            // Simulamos: si hay kilos en calidad en sobrante, NO validar el 35%
+            const calidadSobrante = parseFloat(sobrante.Calidad) || 0;
+            if (calidadSobrante > 0) {
+                requiereSupervisor = false; // Si tiene calidad, no valida 35%
+                faltaDictamenCalidad = true;
+                mensajesError.push("Sobrante - FALTA DICTAMEN DE CALIDAD");
+            }
+        }
+
+        // === VALIDAR SCRAP (como en VB.NET) ===
+        const lineasScrap = data.lineas.filter(l => l.esScrap);
+        for (const scrap of lineasScrap) {
+            const calidadScrap = parseFloat(scrap.Calidad) || 0;
+            if (calidadScrap > 0) {
+                faltaDictamenCalidad = true;
+                mensajesError.push("Scrap - FALTA DICTAMEN DE CALIDAD");
+            }
+        }
+
+        // === VALIDAR SALDO TOTAL (como en VB.NET Cierro()) ===
+        const kgsEntrantes = parseFloat(data.balance.kgsEntrantes) || 0;
+        const sobreOrdenTotal = parseFloat(data.balance.sobreOrden) || 0;
+        const calidadTotal = parseFloat(data.balance.calidad) || 0;
+        const sobranteTotal = parseFloat(data.balance.sobrante) || 0;
+        const scrapTotal = parseFloat(data.balance.scrap) || 0;
+        
+        const saldo = kgsEntrantes - sobreOrdenTotal - calidadTotal - sobranteTotal - scrapTotal;
+        let toleranciaSaldo = kgsEntrantes * TOLERANCIA_GENERAL;
+        if (toleranciaSaldo < 2) toleranciaSaldo = 2;
+        
+        if (Math.abs(saldo) > toleranciaSaldo) {
+            hayFueraTolerancia = true;
+            mensajesError.push(`El SALDO DEBE estar dentro de la TOLERANCIA para efectuar el cierre: ${toleranciaSaldo.toFixed(3)} kgs.`);
+        }
+
+        // === RESULTADO (como en VB.NET) ===
+        if (mensajesError.length > 0) {
+            return {
+                valido: false,
+                requiereSupervisor,
+                mensajes: mensajesError,
+                saldo: saldo.toFixed(3),
+                toleranciaSaldo: toleranciaSaldo.toFixed(3)
+            };
+        }
+
+        return {
+            valido: true,
+            requiereSupervisor,
+            mensajes: [],
+            saldo: saldo.toFixed(3)
+        };
+    };
+
+    // ✅ FUNCIÓN DE CIERRE CON VALIDACIONES VB.NET
     const handleCierreClick = async () => {
-        const result = await Swal.fire({ title: '¿Confirmar Cierre?', text: 'Se CERRARA la operación.', icon: 'question', showCancelButton: true });
+        // ✅ VALIDACIÓN 1: Verificar que la inspección final esté aprobada
+        if (!inspeccionData?.header?.finalRevisado) {
+            await Swal.fire({
+                title: 'Advertencia',
+                text: 'Se debe aprobar la INSPECCION FINAL antes de cerrar la operación',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#ffc107'
+            });
+            return; // ⛔ DETENER AQUÍ - No permitir el cierre
+        }
+
+        // ✅ VALIDACIÓN 2: Validaciones de tolerancia y calidad (VB.NET - Cierro())
+        const validacion = await validarCierreVB();
+        
+        if (!validacion.valido) {
+            const mensajeCompleto = validacion.mensajes.join('\n');
+            
+            if (validacion.requiereSupervisor) {
+                const result = await Swal.fire({
+                    title: 'Advertencia',
+                    html: `<div style="text-align: left; white-space: pre-wrap; font-family: monospace;">${mensajeCompleto}</div>`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Autorizar con Supervisor',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#6c757d'
+                });
+                
+                if (result.isConfirmed) {
+                    setShowSupervisorModal(true);
+                    return;
+                }
+                return;
+            } else {
+                await Swal.fire({
+                    title: 'Advertencia',
+                    html: `<div style="text-align: left; white-space: pre-wrap; font-family: monospace;">${mensajeCompleto}</div>`,
+                    icon: 'warning',
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#ffc107'
+                });
+                return;
+            }
+        }
+
+        // ✅ Si pasó todas las validaciones, mostrar confirmación de cierre (VB.NET - CierroFinal())
+        const result = await Swal.fire({
+            title: '¿Confirmar Cierre?',
+            text: 'Se CERRARA la operación.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            confirmButtonText: 'Sí, cerrar',
+            cancelButtonText: 'Cancelar'
+        });
+        
         if (!result.isConfirmed) return;
+
+        // ✅ Ejecutar cierre en backend
         setModalLoading(true);
         try {
             const userStr = localStorage.getItem('user'); 
             const userObj = userStr ? JSON.parse(userStr) : { nombre: 'SISTEMA' };
-            await axiosInstance.post(`/registracion/operaciones/cerrar/${operacionId}`, { usuario: userObj.nombre });
+            
+            await axiosInstance.post(`/registracion/operaciones/cerrar/${operacionId}`, { 
+                usuario: userObj.nombre
+            });
+            
             await Swal.fire('¡Éxito!', 'Cerrada con éxito.', 'success');
             navigate(`/registracion/operaciones/${data.header.maquinaId}`);
-        } catch (error) { Swal.fire('Error', 'Error al cerrar.', 'error'); } 
-        finally { setModalLoading(false); }
+        } catch (error) {
+            Swal.fire('Error', error.response?.data?.error || 'Error al cerrar.', 'error');
+        } finally {
+            setModalLoading(false);
+        }
     };
 
     const handleNotasCalipsoClick = async () => {
@@ -186,27 +360,6 @@ const EditarOperacion = () => {
     if (loading || !data) return null;
     const { header, balance } = data;
     const isSuspended = currentStatus === 'SUSPENDIDA';
-
-    // ✅ ESTILOS INLINE PARA INPUTS BLOQUEADOS (MÁXIMA PRIORIDAD)
-    // ✅ ESTILOS INLINE PARA INPUTS BLOQUEADOS (MÁXIMA PRIORIDAD)
-    const inputBloqueadoStyle = {
-        backgroundColor: '#e8e4d9 !important',
-        borderColor: '#d4c9a8 !important',
-        color: '#9e9e9e !important',  // ← Cambiado a gris claro
-        opacity: '0.7 !important',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        WebkitTextFillColor: '#9e9e9e !important' // Para Safari/Chrome
-    };
-
-    const inputNormalStyle = {
-        backgroundColor: '#fff',
-        borderColor: '#ced4da',
-        color: '#000',
-        opacity: 1,
-        fontWeight: 'bold',
-        textAlign: 'center'
-    };
 
     return (
         <>
@@ -300,37 +453,57 @@ const EditarOperacion = () => {
                                     <input 
                                         type="text" 
                                         className="form-control grid-cell-input"
+                                        style={{
+                                            backgroundColor: canEditOperacion ? '#fff' : '#e8e4d9',
+                                            opacity: canEditOperacion ? 1 : 0.7
+                                        }}
                                         value={formatNumber(linea.Programados)} 
                                         readOnly 
-                                        disabled={!canEditOperacion}  // ← Esto es clave
+                                        disabled={!canEditOperacion}
                                     />
                                     <input 
                                         type="text" 
                                         className="form-control grid-cell-input"
+                                        style={{
+                                            backgroundColor: canEditOperacion ? '#fff' : '#e8e4d9',
+                                            opacity: canEditOperacion ? 1 : 0.7
+                                        }}
                                         value={formatNumber(linea.SobreOrden)} 
                                         readOnly 
-                                        disabled={!canEditOperacion}  // ← Esto es clave
+                                        disabled={!canEditOperacion}
                                     />
                                     <input 
                                         type="text" 
                                         className="form-control grid-cell-input"
+                                        style={{
+                                            backgroundColor: canEditOperacion ? '#fff' : '#e8e4d9',
+                                            opacity: canEditOperacion ? 1 : 0.7
+                                        }}
                                         value={formatNumber(linea.Calidad)} 
                                         readOnly 
-                                        disabled={!canEditOperacion}  // ← Esto es clave
+                                        disabled={!canEditOperacion}
                                     />
                                     <input 
                                         type="text" 
                                         className="form-control grid-cell-input"
+                                        style={{
+                                            backgroundColor: canEditOperacion ? '#fff' : '#e8e4d9',
+                                            opacity: canEditOperacion ? 1 : 0.7
+                                        }}
                                         value={formatNumber(linea.TotAtados)} 
                                         readOnly 
-                                        disabled={!canEditOperacion}  // ← Esto es clave
+                                        disabled={!canEditOperacion}
                                     />
                                     <input 
                                         type="text" 
                                         className="form-control grid-cell-input"
+                                        style={{
+                                            backgroundColor: canEditOperacion ? '#fff' : '#e8e4d9',
+                                            opacity: canEditOperacion ? 1 : 0.7
+                                        }}
                                         value={formatNumber(linea.TotRollos)} 
                                         readOnly 
-                                        disabled={!canEditOperacion}  // ← Esto es clave
+                                        disabled={!canEditOperacion}
                                     />
                                 </div>
                             ))}
@@ -368,30 +541,46 @@ const EditarOperacion = () => {
                                     <input 
                                         type="text" 
                                         className="form-control grid-cell-input"
+                                        style={{
+                                            backgroundColor: canEditOperacion ? '#fff' : '#e8e4d9',
+                                            opacity: canEditOperacion ? 1 : 0.7
+                                        }}
                                         value={formatNumber(item.totSO)} 
                                         readOnly 
-                                        disabled={!canEditOperacion}  // ← Esto es clave
+                                        disabled={!canEditOperacion}
                                     />
                                     <input 
                                         type="text" 
                                         className="form-control grid-cell-input"
+                                        style={{
+                                            backgroundColor: canEditOperacion ? '#fff' : '#e8e4d9',
+                                            opacity: canEditOperacion ? 1 : 0.7
+                                        }}
                                         value="0" 
                                         readOnly 
-                                        disabled={!canEditOperacion}  // ← Esto es clave
+                                        disabled={!canEditOperacion}
                                     />
                                     <input 
                                         type="text" 
                                         className="form-control grid-cell-input"
+                                        style={{
+                                            backgroundColor: canEditOperacion ? '#fff' : '#e8e4d9',
+                                            opacity: canEditOperacion ? 1 : 0.7
+                                        }}
                                         value={formatNumber(item.totAt)} 
                                         readOnly 
-                                        disabled={!canEditOperacion}  // ← Esto es clave
+                                        disabled={!canEditOperacion}
                                     />
                                     <input 
                                         type="text" 
                                         className="form-control grid-cell-input"
+                                        style={{
+                                            backgroundColor: canEditOperacion ? '#fff' : '#e8e4d9',
+                                            opacity: canEditOperacion ? 1 : 0.7
+                                        }}
                                         value={formatNumber(item.totRo)} 
                                         readOnly 
-                                        disabled={!canEditOperacion}  // ← Esto es clave
+                                        disabled={!canEditOperacion}
                                     />
                                 </div>
                             ))}
@@ -447,7 +636,31 @@ const EditarOperacion = () => {
                     )}
                     
                     <div className="cierre-container">
-                        <button className="btn btn-success btn-block" onClick={handleCierreClick}>CIERRE</button>
+                        <button 
+                            className="btn btn-success btn-block" 
+                            onClick={handleCierreClick}
+                            disabled={!canEditOperacion || modalLoading}
+                            title={!canEditOperacion ? 
+                                (!inspeccionData ? "Cargando inspección..." : 
+                                !inspeccionData.header?.inicioRevisado ? "Debe revisar el inicio en Inspección" : 
+                                "Complete todos los datos de las pasadas") : 
+                                "Cerrar operación"}
+                            style={!canEditOperacion ? {
+                                backgroundColor: '#6c757d',
+                                borderColor: '#6c757d',
+                                cursor: 'not-allowed',
+                                opacity: 0.6
+                            } : {}}
+                        >
+                            {modalLoading ? (
+                                <>
+                                    <i className="fas fa-spinner fa-spin mr-2"></i>
+                                    Cerrando...
+                                </>
+                            ) : (
+                                'CIERRE'
+                            )}
+                        </button>
                     </div>
                 </div>
             </div>
