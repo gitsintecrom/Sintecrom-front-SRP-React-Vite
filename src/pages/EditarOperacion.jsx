@@ -405,6 +405,11 @@ const EditarOperacion = () => {
                                         <InfoItem label="Recubrimiento" value={header.Recubrimiento} />
                                         <InfoItem label="Calidad" value={header.Calidad} />
                                         <InfoItem label="Ancho" value={header.Ancho} />
+                                        <div className="info-item" style={{ marginTop: '0.5rem', borderTop: '1px solid #ccc', paddingTop: '0.5rem' }}>
+                                            <span className="info-value" style={{ fontSize: '0.85rem',  color: '#1b03f5', fontWeight: 'bold' }}>
+                                                {header.CodigoProducto || 'N/A'}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
