@@ -514,8 +514,8 @@ const EditarOperacion = () => {
 
                             {[
                                 { tipo: 'Sobrante', totSO: balance.sobrante, totAt: balance.atadosSobrante, totRo: balance.rollosSobrante, config: { bSobrante: true, bScrap: false, Tarea: 'Sobrante' } },
-                                { tipo: 'Scrap Seriado', totSO: balance.scrapSeriado, totAt: balance.atadosScrapSeriado, totRo: 0, config: { bSobrante: false, bScrap: true, bScrapSeriado: true, Tarea: 'Scrap Seriado' } },
-                                { tipo: 'Scrap No Seriado', totSO: balance.scrapNoSeriado, totAt: balance.atadosScrapNoSeriado, totRo: 0, config: { bSobrante: false, bScrap: true, bScrapNoSeriado: true, Tarea: 'Scrap No Seriado' } }
+                                { tipo: 'Scrap Seriado', totSO: balance.scrapSeriado, totAt: balance.atadosScrapSeriado, totRo: balance.rollosScrapSeriado, config: { bSobrante: false, bScrap: true, bScrapSeriado: true, Tarea: 'Scrap Seriado' } },
+                                { tipo: 'Scrap No Seriado', totSO: balance.scrapNoSeriado, totAt: balance.atadosScrapNoSeriado, totRo: balance.rollosScrapNoSeriado, config: { bSobrante: false, bScrap: true, bScrapNoSeriado: true, Tarea: 'Scrap No Seriado' } }
                             ].map((item) => (
                                 <div key={item.tipo} className="grid-row" style={{ cursor: 'default' }}>
                                     <div
