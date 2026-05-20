@@ -485,6 +485,13 @@ const EditarOperacionEmbalaje = () => {
         }
     };
 
+    const handleExit = async () => {
+        navigate(-1);
+        setTimeout(() => {
+            window.location.reload();
+        }, 100); // Pequeño retraso para asegurar que la navegación ocurra primero
+    };
+
     if (loading || !data) return <div className="loading-screen">Cargando Operación...</div>;
 
     const { header, balance, lineas } = data;
@@ -493,7 +500,7 @@ const EditarOperacionEmbalaje = () => {
         <div className="slitter-container">
             <header className="slitter-header">
                 <div className="header-left"><h1>REGISTRACION Embalaje - Editar Operación</h1></div>
-                <div className="header-right"><button className="back-link" onClick={() => navigate(-1)}>← Volver a la Grilla</button></div>
+                <div className="header-right"><button className="back-link" onClick={handleExit}>← Volver a la Grilla</button></div>
             </header>
 
             <div className="slitter-layout">
