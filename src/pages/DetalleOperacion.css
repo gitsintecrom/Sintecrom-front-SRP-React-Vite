@@ -1,5 +1,9 @@
 /* /src/pages/DetalleOperacion.css */
 
+/* ========================================
+   ESTILOS PARA DetalleOperacion
+   ======================================== */
+
 .detalle-container {
     display: flex;
     gap: 1rem;
@@ -32,46 +36,140 @@
     color: black;
     flex-shrink: 0;
 }
-.detalle-container .info-item { display: flex; align-items: baseline; margin-bottom: 0.1rem; font-size: 0.9rem; }
-.detalle-container .info-label { font-weight: bold; font-style: italic; min-width: 150px; }
-.detalle-container .info-value { margin-left: 0.5rem; font-weight: 500; white-space: pre-wrap; }
-.detalle-container .info-value.bold { font-weight: bold; font-size: 1.2em; color: black; }
-.detalle-container .header-top-row { display: flex; justify-content: space-between; gap: 1rem; }
-.detalle-container .header-left-col { flex: 1; }
-.detalle-container .header-right-col { flex-basis: 45%; }
-.detalle-container .entrante-block { border: 1px solid #343a40; border-radius: 5px; flex-grow: 1; background-color: #e9ecef;}
-.detalle-container .entrante-header { font-weight: bold; background-color: #adb5bd; padding: 0.25rem 0.75rem; border-bottom: 1px solid #343a40;}
-.detalle-container .entrante-body { padding: 0.5rem; }
-.detalle-container .cuchillas-block {
-    border: 2px solid #343a40; border-radius: 5px; padding: 0.5rem 1rem; margin-top: 1rem;
-    display: flex; justify-content: space-around; align-items: center; background-color: #e9ecef; font-size: 1.1rem;
+
+.detalle-container .info-item { 
+    display: flex; 
+    align-items: baseline; 
+    margin-bottom: 0.1rem; 
+    font-size: 0.9rem; 
+    min-width: 0;
 }
-.detalle-container .cuchillas-block .info-value.bold { font-size: 1.5em; }
 
+.detalle-container .info-label { 
+    font-weight: bold; 
+    font-style: italic; 
+    min-width: 150px;
+    flex-shrink: 0;
+}
 
-/* ===== INICIO DE LA CORRECCIÓN DE LAYOUT ===== */
+.detalle-container .info-value { 
+    margin-left: 0.5rem; 
+    font-weight: 500; 
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    text-align: left;
+    display: block;
+}
 
-/* Contenedor Gris Principal (Grilla + Balance) */
+.detalle-container .info-value.bold { 
+    font-weight: bold; 
+    font-size: 1.2em; 
+    color: black; 
+}
+
+.detalle-container .header-top-row { 
+    display: flex; 
+    justify-content: space-between; 
+    gap: 1rem; 
+}
+
+.detalle-container .header-left-col { 
+    flex: 1; 
+}
+
+.detalle-container .header-right-col { 
+    flex-basis: 45%; 
+}
+
+.detalle-container .entrante-block { 
+    border: 1px solid #343a40; 
+    border-radius: 5px; 
+    flex-grow: 1; 
+    background-color: #e9ecef;
+}
+
+.detalle-container .entrante-header { 
+    font-weight: bold; 
+    background-color: #adb5bd; 
+    padding: 0.25rem 0.75rem; 
+    border-bottom: 1px solid #343a40;
+}
+
+.detalle-container .entrante-body { 
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+/* ✅ PANEL CUCHILLAS - ESTILO VB.NET (IGUAL QUE EDITAROPERACION) */
+.cuchillas-panel {
+    background-color: #A9A9A9;
+    border: 2px solid #808080;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 65px;
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+.cuchillas-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+}
+
+.cuchillas-label {
+    font-family: 'Microsoft Sans Serif', Arial, sans-serif;
+    font-size: 11pt;
+    font-style: italic;
+    color: #000080;
+    margin-bottom: 2px;
+    text-align: center;
+}
+
+.cuchillas-value {
+    font-family: 'Microsoft Sans Serif', Arial, sans-serif;
+    font-size: 14pt;
+    font-weight: bold;
+    color: #000000;
+    text-align: center;
+}
+
+/* --- Grilla y Balance --- */
 .detalle-container .detalle-body-container {
     background-color: #adb5bd;
     border-radius: 0.25rem;
     padding: 1rem;
 }
 
-/* Grilla (solo las filas) */
-.detalle-container .grid-body {
-    /* Sin cambios adicionales */
+.detalle-container .grid-header { 
+    color: black; 
+    font-weight: bold; 
+    text-align: center; 
 }
-/* ===== FIN DE LA CORRECCIÓN CLAVE DE LAYOUT ===== */
 
-.detalle-container .grid-header { color: black; font-weight: bold; text-align: center; }
-.detalle-container .grid-header, .detalle-container .grid-row {
-    display: grid; grid-template-columns: 2fr repeat(5, 1fr); gap: 0.75rem; align-items: stretch;
-    padding-bottom: 0.5rem; margin-bottom: 0.5rem;
+.detalle-container .grid-header, 
+.detalle-container .grid-row {
+    display: grid; 
+    grid-template-columns: 2fr repeat(5, 1fr); 
+    gap: 0.75rem; 
+    align-items: stretch;
+    padding-bottom: 0.5rem; 
+    margin-bottom: 0.5rem;
 }
+
 .detalle-container .grid-cell-desc {
-    background-color: #f0e68c; /* Fondo amarillo */
-    color: #888888 !important;/* Texto gris claro */
+    background-color: #f0e68c;
+    color: black;
     padding: 0.5rem;
     border-radius: 4px;
     font-weight: bold;
@@ -83,13 +181,14 @@
     flex-direction: column;
     justify-content: center;
 }
+
 .detalle-container .grid-cell-input {
     text-align: center;
     font-weight: bold;
     font-size: 1.5rem;
-    background-color: #f5f5f5; /* Fondo gris claro */
-    color: #888888; /* Texto gris claro */
-    border: 2px inset #ddd;
+    background-color: #f0e68c;
+    color: black;
+    border: 2px inset #aaa;
     padding: 0.25rem;
 }
 
@@ -101,33 +200,46 @@
     color: black;
     flex-shrink: 0;
 }
+
 .detalle-container .balance-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
     gap: 0.5rem;
 }
-.detalle-container .balance-grid .balance-label { font-weight: bold; font-style: italic; }
-.detalle-container .balance-grid .balance-value { font-weight: bold; font-size: 1.1em; }
+
+.detalle-container .balance-grid .balance-label { 
+    font-weight: bold; 
+    font-style: italic; 
+}
+
+.detalle-container .balance-grid .balance-value { 
+    font-weight: bold; 
+    font-size: 1.1em; 
+}
 
 /* --- Barra de Acciones --- */
-.detalle-container .actions-sidebar .btn { font-weight: bold; }
-.detalle-container .cierre-container { margin-top: auto; }
+.detalle-container .actions-sidebar .btn { 
+    font-weight: bold; 
+}
 
-/* Estilos para los inputs readOnly con mayor especificidad */
+.detalle-container .cierre-container { 
+    margin-top: auto; 
+}
+
+/* Estilos para los inputs readOnly */
 .detalle-container .grid-cell-input[readOnly] {
-    background-color: #f5f5f5; /* Gris claro */
-    color: #888888 !important; /* Gris suave con !important para priorizar */
+    background-color: #f5f5f5;
+    color: #888888 !important;
     border-color: #ddd;
     opacity: 1;
 }
 
-/* Asegurar cursor default en todo momento */
 .detalle-container .grid-row {
     cursor: default;
 }
 
-/* Estilos para el overlay de los modales */
+/* Overlay de modales */
 .cuchillas-modal-overlay {
     position: fixed;
     top: 0;
@@ -139,4 +251,21 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+}
+
+
+/* Botón Cierre deshabilitado en modo Detalle */
+.detalle-container .actions-sidebar .btn-success:disabled {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #adb5bd !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+    transition: none !important;
+}
+
+.detalle-container .actions-sidebar .btn-success:disabled:hover {
+    background-color: #6c757d !important;
+    transform: none !important;
+    box-shadow: none !important;
 }

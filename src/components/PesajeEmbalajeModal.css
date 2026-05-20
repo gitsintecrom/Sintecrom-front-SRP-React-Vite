@@ -1,0 +1,388 @@
+/* src/components/modals/PesajeEmbalajeModal.css */
+
+.pesaje-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    font-family: Arial, sans-serif;
+}
+
+.pesaje-modal.embalaje-modal {
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    width: 95%;
+    max-width: 1100px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-close {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* INFO DEL PEDIDO */
+.info-panel.embalaje-info {
+    background: #fff9e6;
+    border-left: 4px solid #667eea;
+    padding: 12px 15px;
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    font-size: 13px;
+}
+
+.info-panel.embalaje-info div {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-panel.embalaje-info strong {
+    color: #667eea;
+    margin-bottom: 2px;
+}
+
+/* PESO DE BALANZA */
+.pesaje-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+.pesaje-section label {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.peso-input {
+    width: 120px;
+    padding: 10px;
+    border: 2px solid #667eea;
+    border-radius: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.peso-input:focus {
+    outline: none;
+    border-color: #764ba2;
+}
+
+/* TOTALES */
+.totales.embalaje-totales {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.total-box {
+    background: white;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.total-box span {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.total-box strong {
+    font-size: 20px;
+    color: #333;
+}
+
+.total-box.total-final {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.total-box.total-final span {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.total-box.total-final strong {
+    color: white;
+}
+
+/* FORM DE CARGA */
+.carga-section {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-row label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #444;
+}
+
+.form-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-input-small {
+    width: 80px;
+    padding: 8px;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-input-small:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.form-select {
+    padding: 8px;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+    background: white;
+}
+
+/* BOTONES DE ACCIÓN */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+}
+
+.btn-so {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.btn-so:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+}
+
+.btn-calidad {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+}
+
+.btn-calidad:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(67, 233, 123, 0.4);
+}
+
+.btn-reset {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-reset:hover:not(:disabled) {
+    background: #5a6268;
+}
+
+.btn-registrar {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.btn-registrar:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* GRILLA DE PAQUETES */
+.grilla-paquetes {
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+}
+
+.grilla-paquetes h4 {
+    margin: 0;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.paquetes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.paquetes-table th {
+    background: #667eea;
+    color: white;
+    padding: 10px 8px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.paquetes-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.paquetes-table tbody tr:hover {
+    background: #f8f9ff;
+}
+
+.acciones {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.btn-icon:hover {
+    background: #e9ecef;
+}
+
+.btn-imprimir:hover {
+    color: #007bff;
+}
+
+.btn-eliminar:hover {
+    color: #dc3545;
+}
+
+/* FOOTER */
+.modal-footer {
+    display: flex;
+    gap: 15px;
+    padding: 15px 20px;
+    background: white;
+    border-top: 1px solid #e0e0e0;
+    justify-content: center;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .totales.embalaje-totales {
+        grid-template-columns: 1fr;
+    }
+    
+    .carga-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+}

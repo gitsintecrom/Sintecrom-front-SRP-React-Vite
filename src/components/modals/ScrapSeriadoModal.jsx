@@ -18,7 +18,8 @@ const ScrapSeriadoModal = ({ lineaData, operacionId, onClose, onSuccess }) => {
     const [cargandoAtados, setCargandoAtados] = useState(true);
     const [ultimaEtiqueta, setUltimaEtiqueta] = useState(null);
 
-    const loteIdsParam = lineaData?.Lote_IDS || null;
+
+    const loteIdsParam = lineaData?.Lote_IDS || lineaData?.LoteID || null;
     const sobranteParam = 2; // Scrap
 
     // === CARGA INICIAL ===

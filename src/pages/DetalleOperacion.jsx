@@ -45,7 +45,6 @@ const DetalleOperacion = () => {
     const [notasCalipso, setNotasCalipso] = useState('');
 
     const operationStatusFromGrid = location.state?.operationStatus;
-
     const [maquinaNumero, setMaquinaNumero] = useState("");
 
     const fetchData = async () => {
@@ -58,19 +57,9 @@ const DetalleOperacion = () => {
             const response = await axiosInstance.get(`/registracion/detalle/${operacionId}`);
             const fetchedData = response.data || { header: {}, lineas: [], balance: {} };
             
-            console.log("Response.......: ", fetchedData);
-            
-            // ✅ Obtener maquinaId del header y extraer el número
             const maquinaId = fetchedData.header?.maquinaId || "No disponible";
-            console.log("maquinaId del header:", maquinaId);
-            
-            // Extraer solo el número después de "SL" (si existe)
             const maquinaMatch = maquinaId?.match(/^SL(\d+)$/);
-            const maquinaNumeroCalculado = maquinaMatch ? maquinaMatch[1] : "No disponible";
-            console.log("Número de máquina:", maquinaNumeroCalculado);
-            
-            // Guardar el número de máquina en el estado
-            setMaquinaNumero(maquinaNumeroCalculado);
+            setMaquinaNumero(maquinaMatch ? maquinaMatch[1] : "No disponible");
             
             setData(fetchedData);
         } catch (err) {
@@ -84,16 +73,6 @@ const DetalleOperacion = () => {
     useEffect(() => {
         fetchData();
     }, [operacionId, navigate]);
-
-    // Forzar actualización de estilos solo cuando los datos estén cargados
-    useEffect(() => {
-        if (!loading && data) {
-            const elements = document.querySelectorAll('.grid-cell-desc, .grid-cell-input');
-            elements.forEach(el => {
-                el.style.color = ''; // Resetear color para que CSS lo aplique
-            });
-        }
-    }, [loading, data]);
 
     const handleCuchillasClick = async () => {
         if (!data?.header) return;
@@ -190,16 +169,12 @@ const DetalleOperacion = () => {
     const isNotasSRPDisabled = !header.tieneNotasSRP;
 
     const pasadas = header.Pasadas || 1;
-    const cantRollos = header.CantRollos || 0;
-    const scrapProgramado = header.ScrapProgramado || 63;
-    const kgsProgramados = header.KgsProgramados || 4267;
 
     return (
         <>
             <div className="detalle-container">
                 <div className="main-content">
                     <div className="d-flex justify-content-between align-items-center mb-3">
-                        {/* ✅ Título actualizado con el número de máquina */}
                         <h1 className="m-0" style={{color: 'white'}}>REGISTRACION - Detalle Slitter {maquinaNumero}</h1>
                         <div className="d-flex align-items-center">
                             {header.maquinaId === 'SL2' && (
@@ -228,10 +203,10 @@ const DetalleOperacion = () => {
                                         <InfoItem label="Cant.Atados" value={header.CantAtados || 0} />
                                         <InfoItem label="Cant.Rollos" value={header.CantRollos || 0} />
                                         <InfoItem label="Stock" value={formatNumber(header.Stock)} />
-                                        <InfoItem label="Kgs Programados" value={formatNumber(kgsProgramados, 2)} />
+                                        <InfoItem label="Kgs Programados" value={formatNumber(header.KgsProgramados, 2)} />
                                     </div>
                                 </div>
-                                <InfoItem label="Scrap Programado" value={formatNumber(scrapProgramado, 2)} />
+                                <InfoItem label="Scrap Programado" value={formatNumber(header.ScrapProgramado, 2)} />
                             </div>
                             <div className="header-right-col">
                                 <div className="entrante-block">
@@ -245,15 +220,37 @@ const DetalleOperacion = () => {
                                         <InfoItem label="Recubrimiento" value={header.Recubrimiento} />
                                         <InfoItem label="Calidad" value={header.Calidad} />
                                         <InfoItem label="Ancho" value={header.Ancho} />
+                                        <div className="info-item" style={{ marginTop: '0.5rem', borderTop: '1px solid #ccc', paddingTop: '0.5rem' }}>
+                                            <span className="info-value" style={{ fontSize: '0.85rem', color: '#1b03f5', fontWeight: 'bold' }}>
+                                                {header.CodigoProducto || 'N/A'}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="cuchillas-block">
-                            <InfoItem label="Cuchillas" value={header.Cuchillas} bold />
-                            <InfoItem label="Pasadas" value={pasadas} />
-                            <InfoItem label="Diámetro" value={header.Diametro} />
-                            <InfoItem label="Corona" value={header.Corona} />
+                    </div>
+
+                    {/* ✅ SECCIÓN Cuchillas, Pasadas, Diámetro, Corona - ESTILO VB.NET (IGUAL QUE EDITAR) */}
+                    <div className="cuchillas-panel">
+                        <div className="cuchillas-item">
+                            <span className="cuchillas-label">Cuchillas:</span>
+                            <span className="cuchillas-value">{header.Cuchillas || 'N/A'}</span>
+                        </div>
+                        
+                        <div className="cuchillas-item">
+                            <span className="cuchillas-label">Pasadas:</span>
+                            <span className="cuchillas-value">{pasadas}</span>
+                        </div>
+                        
+                        <div className="cuchillas-item">
+                            <span className="cuchillas-label">Diámetro:</span>
+                            <span className="cuchillas-value">{header.Diametro || '0'}</span>
+                        </div>
+                        
+                        <div className="cuchillas-item">
+                            <span className="cuchillas-label">Corona:</span>
+                            <span className="cuchillas-value">{header.Corona || '0'}</span>
                         </div>
                     </div>
 
@@ -360,6 +357,12 @@ const DetalleOperacion = () => {
                         className="btn btn-light btn-block"
                         disabled={isNotasCalipsoDisabled}
                         onClick={handleNotasCalipsoClick}
+                        title={!isNotasCalipsoDisabled ? "" : "No hay notas de Calipso para esta operación"}
+                        style={!isNotasCalipsoDisabled ? {} : { 
+                            opacity: 0.6, 
+                            cursor: 'not-allowed',
+                            backgroundColor: '#e9ecef'
+                        }}
                     >
                         Notas Calipso
                     </button>
@@ -378,7 +381,17 @@ const DetalleOperacion = () => {
                     )}
 
                     <div className="cierre-container"> 
-                        <button className="btn btn-success btn-block" disabled={!isOperationEditable}>
+                        <button 
+                            className="btn btn-success btn-block" 
+                            disabled={true}  // ✅ SIEMPRE DESHABILITADO
+                            title="El cierre solo está disponible en el modo de edición"
+                            style={{
+                                backgroundColor: '#6c757d',
+                                borderColor: '#6c757d',
+                                cursor: 'not-allowed',
+                                opacity: 0.6
+                            }}
+                        >
                             CIERRE
                         </button> 
                     </div>
