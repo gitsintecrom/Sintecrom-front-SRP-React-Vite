@@ -29,16 +29,14 @@ const CaliIcon = ({ iconType }) => {
 // LÓGICA DE COLORES IDÉNTICA AL VB.NET
 const calcularEstadoYColorVB = (row) => {
     const tieneStock = row.Stock && parseFloat(row.Stock) > 0;
-    const estaAbastecida = row.Abastecida === '0'; // '0' = sí abastecida
-    const estadoOp = row.Estado; // '0' = cerrada, '1' = abierta
+    const estaAbastecida = row.Abastecida === '0';
+    const estadoOp = row.Estado;
     const estaSuspendida = row.Suspendida == 1;
-    const estadoAnterior = row.EstadoAnterior; // '0' = abierta, '2' = cerrada
+    const estadoAnterior = row.EstadoAnterior;
     const suspendidaAnterior = row.SuspendidaAnterior == 1;
     const tieneCalidad = row.TieneCalidad;
-    const dictamenCalidad = row.DictamenCalidad; // null, 0, 1, 2
-    const esPreembalaje = row.Preembalaje === '1';
+    const dictamenCalidad = row.DictamenCalidad;
     
-    // Verificar tolerancia (solo para operaciones cerradas)
     let fueraTolerancia = false;
     if (estadoOp === '0' && tieneStock && row.Kilos_Balanza > 0) {
         const stock = parseFloat(row.Stock);
@@ -53,9 +51,8 @@ const calcularEstadoYColorVB = (row) => {
         }
     }
 
-    // LÓGICA IDÉNTICA AL VB.NET PARA EMBALAJE
+    // ✅ CASO 1: Suspendida
     if (estaSuspendida) {
-        // Suspendida = blanco
         return { 
             backgroundColor: '#FFFFFF', 
             color: 'black', 
@@ -65,28 +62,33 @@ const calcularEstadoYColorVB = (row) => {
         };
     }
     
+    // ✅ CASO 2: En condiciones normales (tiene stock, abastecida, op anterior OK)
     if (tieneStock && estaAbastecida && (row.OpAnteriorStatus === 'OK' || row.OpAnteriorStatus === 'OK-R')) {
-        // En condiciones normales de registrar
-        if (estadoOp === '1' && tieneCalidad && dictamenCalidad === 0) {
-            // Abierta y en calidad (sin dictamen)
-            return { 
-                backgroundColor: '#FFFF00', 
-                color: 'black', 
-                caliIcon: 'rojo-icono',
-                seleccionable: false,
-                preembalajeText: ''
-            };
-        } else if (estadoOp === '1' && tieneCalidad && (dictamenCalidad === 1 || dictamenCalidad === 2)) {
-            // Abierta y calidad dictaminada
-            return { 
-                backgroundColor: '#EEE8AA', 
-                color: 'black', 
-                caliIcon: 'verde-tilde-icono',
-                seleccionable: false,
-                preembalajeText: ''
-            };
-        } else if (estadoOp === '1' && !tieneCalidad) {
-            // Abierta y no en calidad = gris
+        if (estadoOp === '1' && tieneCalidad) {
+            // Abierta y en calidad
+            if (!dictamenCalidad || dictamenCalidad === 0) {
+                // Sin dictamen = AMARILLO con icono ROJO
+                return { 
+                    backgroundColor: '#FFFF00', 
+                    color: 'black', 
+                    caliIcon: 'rojo-icono',
+                    seleccionable: false,
+                    preembalajeText: ''
+                };
+            } else if (dictamenCalidad === 1 || dictamenCalidad === 2) {
+                // ✅ CON dictamen = PALE GOLDENROD con icono VERDE
+                return { 
+                    backgroundColor: '#EEE8AA', 
+                    color: 'black', 
+                    caliIcon: 'verde-tilde-icono',
+                    seleccionable: true,
+                    preembalajeText: ''
+                };
+            }
+        }
+        
+        if (estadoOp === '1' && !tieneCalidad) {
+            // Abierta sin calidad = GRIS
             return { 
                 backgroundColor: '#808080', 
                 color: 'white', 
@@ -94,10 +96,11 @@ const calcularEstadoYColorVB = (row) => {
                 seleccionable: true,
                 preembalajeText: ''
             };
-        } else {
-            // Cerrada y en condiciones
+        }
+        
+        if (estadoOp === '0') {
+            // Cerrada
             if (fueraTolerancia) {
-                // Fuera de tolerancia = amarillo
                 return { 
                     backgroundColor: '#FFFF00', 
                     color: 'black', 
@@ -106,7 +109,6 @@ const calcularEstadoYColorVB = (row) => {
                     preembalajeText: ''
                 };
             } else {
-                // Lista para embalaje = verde
                 return { 
                     backgroundColor: '#00FF00', 
                     color: 'black', 
@@ -116,43 +118,63 @@ const calcularEstadoYColorVB = (row) => {
                 };
             }
         }
-    } else {
-        // NO en condiciones normales - LÓGICA ESPECIAL DE EMBALAJE
-        
-        // CORRECCIÓN CLAVE: estadoAnterior !== '0' (no estadoAnterior === '0')
-        // Si la operación anterior está ABIERTA (EstadoAnterior != '0') Y no está suspendida anteriormente
-        // → ES PREEMBALAJE (se puede procesar antes de que termine la anterior)
-        if (estadoAnterior !== '0' && !suspendidaAnterior) {
-            if (estadoOp === '1' && !tieneCalidad) {
-                // Abierta en preembalaje = gris claro
+    }
+    
+    // ✅ CASO 3: NO está en condiciones normales - LÓGICA ESPECIAL (como VB.NET)
+    // Si la operación anterior está CERRADA (EstadoAnterior != '0') y no suspendida
+    if (estadoAnterior !== '0' && !suspendidaAnterior) {
+        if (estadoOp === '1' && tieneCalidad) {
+            // ✅ Abierta y en calidad CON dictamen = PALE GOLDENROD
+            if (dictamenCalidad === 1 || dictamenCalidad === 2) {
                 return { 
-                    backgroundColor: '#E0E0E0', 
+                    backgroundColor: '#EEE8AA', 
                     color: 'black', 
-                    caliIcon: 'gris-fondo',
+                    caliIcon: 'verde-tilde-icono',
                     seleccionable: true,
-                    preembalajeText: '+ PESO' // SOLO APARECE EN GRIS CLARO
-                };
-            } else {
-                // Cerrada en preembalaje = lawn green
-                return { 
-                    backgroundColor: '#7CFC00', 
-                    color: 'black', 
-                    caliIcon: 'verde-fondo',
-                    seleccionable: true,
-                    preembalajeText: '' // SIN TEXTO EN VERDE LAWN
+                    preembalajeText: ''
                 };
             }
-        } else {
-            // Bloqueada = rojo
+            // Abierta y en calidad SIN dictamen = AMARILLO
+            if (!dictamenCalidad || dictamenCalidad === 0) {
+                return { 
+                    backgroundColor: '#FFFF00', 
+                    color: 'black', 
+                    caliIcon: 'rojo-icono',
+                    seleccionable: false,
+                    preembalajeText: ''
+                };
+            }
+        }
+        
+        if (estadoOp === '1' && !tieneCalidad) {
+            // Abierta sin calidad = GRIS CLARO (Preembalaje)
             return { 
-                backgroundColor: '#FF0000', 
-                color: 'white', 
-                caliIcon: 'rojo-fondo',
-                seleccionable: false,
-                preembalajeText: ''
+                backgroundColor: '#E0E0E0', 
+                color: 'black', 
+                caliIcon: 'gris-fondo',
+                seleccionable: true,
+                preembalajeText: '+ PESO'
             };
         }
+        
+        // Cerrada = LAWN GREEN
+        return { 
+            backgroundColor: '#7CFC00', 
+            color: 'black', 
+            caliIcon: 'verde-fondo',
+            seleccionable: true,
+            preembalajeText: ''
+        };
     }
+    
+    // ✅ CASO 4: Bloqueada (operación anterior abierta o suspendida) = ROJO
+    return { 
+        backgroundColor: '#FF0000', 
+        color: 'white', 
+        caliIcon: 'rojo-fondo',
+        seleccionable: false,
+        preembalajeText: ''
+    };
 };
 
 const OperacionesEmbalaje = () => {
@@ -206,36 +228,6 @@ const OperacionesEmbalaje = () => {
         }
     };
 
-    // const handleRowClicked = (row) => {
-    //     const estado = calcularEstadoYColorVB(row);
-        
-    //     const esPreembalajeAbierta = row.Estado === '1' && !row.TieneCalidad && 
-    //                                 row.EstadoAnterior !== '0' && !row.SuspendidaAnterior;
-    //     const esAbiertaSinCalidad = row.Estado === '1' && !row.TieneCalidad && 
-    //                                 (row.EstadoAnterior === '0' || row.SuspendidaAnterior);
-    //     const esEnCalidad = row.Estado === '1' && row.TieneCalidad && row.DictamenCalidad === 0;
-    //     const esFueraTolerancia = row.Estado === '0' && row.Stock && parseFloat(row.Stock) > 0 && 
-    //                             row.Kilos_Balanza > 0 && 
-    //                             (() => {
-    //                                 const stock = parseFloat(row.Stock);
-    //                                 const pesada = parseFloat(row.Kilos_Balanza);
-    //                                 const opAnteriorOk = row.OpAnteriorStatus === 'OK' || row.OpAnteriorStatus === 'OK-R';
-    //                                 const toleranciaPorcentaje = opAnteriorOk && row.OpAnteriorStatus === 'OK-R' ? 0.05 : 0.01;
-    //                                 let margenTolerancia = stock * toleranciaPorcentaje;
-    //                                 if (margenTolerancia < 1) margenTolerancia = 1;
-    //                                 return pesada > stock + margenTolerancia || pesada < stock - margenTolerancia;
-    //                             })();
-        
-    //     if (esPreembalajeAbierta || esAbiertaSinCalidad || esEnCalidad || esFueraTolerancia) {
-    //         navigate(`/registracion/editar-embalaje/${row.Operacion_ID}`, { 
-    //             state: { 
-    //                 operationStatus: estado,
-    //                 origen: "OperacionesEmbalaje"
-    //             } 
-    //         });
-    //     }
-    // };
-
     const handleRowClicked = (row) => {
         const estado = calcularEstadoYColorVB(row);
         const bg = estado.backgroundColor;
@@ -266,61 +258,224 @@ const OperacionesEmbalaje = () => {
             return Swal.fire('Atención', 'Debe seleccionar al menos una operación para procesar.', 'warning');
         }
 
-        const primeraOperacion = selectedRows[0];
-        const serieLoteBase = primeraOperacion.Origen_Lote?.substring(0, 5);
-        const numeroPedidoBase = primeraOperacion.NumeroPedido;
-        const anchoBase = primeraOperacion.CodProdPedido?.substring(19, 4) || '0000';
+        console.log('🔍 Operaciones seleccionadas:', selectedRows.length);
+        console.log('📋 Detalle:', selectedRows.map(r => r.NumeroDocumento));
 
+        // ✅ VALIDACIÓN 1: Verificar que las operaciones seleccionadas sean VERDES
+        const operacionesValidas = selectedRows.filter(row => {
+            const estado = calcularEstadoYColorVB(row);
+            // ✅ SOLO permitir procesar operaciones VERDES
+            const esVerde = estado.backgroundColor === '#00FF00' || estado.backgroundColor === '#7CFC00';
+            return esVerde;
+        });
+
+        if (operacionesValidas.length === 0) {
+            return Swal.fire(
+                'Atención', 
+                'No hay operaciones válidas seleccionadas para procesar.\n\n' +
+                'Solo se pueden procesar operaciones en estado:\n' +
+                '• Lista para Embalaje (Verde)\n' +
+                '• Preembalaje (Verde Lawn)\n\n' +
+                'Las operaciones en otros estados (gris, amarillo, rojo, blanco) no pueden procesarse.', 
+                'warning'
+            );
+        }
+
+        console.log('✅ Operaciones válidas (verdes):', operacionesValidas.length);
+
+        // ✅ VALIDACIÓN 2: Verificar que las operaciones aún existan (no cerradas)
+        try {
+            for (const row of operacionesValidas) {
+                const response = await axiosInstance.get(`/registracion/operaciones/verificar-estado/${row.Operacion_ID}`);
+                if (!response.data.existe) {
+                    return Swal.fire('Advertencia', `Una de las operaciones seleccionadas ya fue CERRADA. Vuelva a Registración`, 'warning');
+                }
+            }
+        } catch (error) {
+            console.error('Error al verificar estado:', error);
+        }
+
+        // ✅ VALIDACIÓN 3: Validar compatibilidad entre operaciones
+        const primeraOperacion = operacionesValidas[0];
+        let serieBase = '';
+        let serieLBase = '';
+        let anchoBase = '';
+        let numeroPedidoBase = '';
+        let operacionesAAbrir = '';
         let hayError = false;
         let mensajeError = '';
+        let validar35Embalaje = false;
+
+        // Obtener datos de la primera operación
+        if (maquinaId === 'EMB') {
+            serieBase = primeraOperacion.Origen_Lote?.substring(0, 5) || '';
+            if (primeraOperacion.CodProdPedido?.trim().length >= 23) {
+                anchoBase = primeraOperacion.CodProdPedido.trim().substring(19, 4);
+            } else {
+                anchoBase = '0000';
+            }
+        } else {
+            serieBase = primeraOperacion.Origen_Lote || '';
+        }
         
-        for (const row of selectedRows) {
-            const serieLote = row.Origen_Lote?.substring(0, 5);
-            const numeroPedido = row.NumeroPedido;
-            const ancho = row.CodProdPedido?.substring(19, 4) || '0000';
-            
-            if (serieLote !== serieLoteBase || numeroPedido !== numeroPedidoBase) {
-                hayError = true;
-                mensajeError = 'Las operaciones seleccionadas deben ser del mismo PEDIDO y la misma SERIE o de la misma SERIE/LOTE (en caso de ser PEDIDOS distintos) y Siempre los ANCHOS deben ser iguales';
-                break;
+        serieLBase = primeraOperacion.Origen_Lote || '';
+        numeroPedidoBase = primeraOperacion.NumeroPedido?.trim() || '';
+        operacionesAAbrir = primeraOperacion.NumeroDocumento || '';
+
+        // ✅ VALIDAR TODAS LAS OPERACIONES SELECCIONADAS
+        for (let i = 1; i < operacionesValidas.length; i++) {
+            const row = operacionesValidas[i];
+            let serie = '';
+            let serieL = row.Origen_Lote || '';
+            let ancho = '';
+            let numeroPedido = row.NumeroPedido?.trim() || '';
+
+            if (maquinaId !== 'EMB') {
+                // Para Slitter: deben ser misma Serie/Lote completa
+                if (serieBase !== serieL) {
+                    hayError = true;
+                    mensajeError = 'Las operaciones seleccionadas deben ser de la misma SERIE/LOTE';
+                    break;
+                }
+            } else {
+                // Para Embalaje
+                serie = serieL.substring(0, 5);
+                
+                if (row.CodProdPedido?.trim().length >= 23) {
+                    ancho = row.CodProdPedido.trim().substring(19, 4);
+                } else {
+                    ancho = '0000';
+                }
+
+                if (serieBase === serie) {
+                    if (numeroPedidoBase !== numeroPedido) {
+                        validar35Embalaje = true;
+                        if (serieLBase !== serieL) {
+                            hayError = true;
+                            mensajeError = 'Las operaciones seleccionadas deben ser del mismo PEDIDO y la misma SERIE\n' +
+                                        'o de la misma SERIE/LOTE (en caso de ser PEDIDOS distintos)\ny Siempre los ANCHOS deben ser iguales';
+                            break;
+                        } else {
+                            if (ancho !== anchoBase) {
+                                hayError = true;
+                                mensajeError = 'Los anchos de las operaciones seleccionadas deben ser iguales';
+                                break;
+                            }
+                        }
+                    } else {
+                        if (ancho !== anchoBase) {
+                            hayError = true;
+                            mensajeError = 'Los anchos de las operaciones seleccionadas deben ser iguales';
+                            break;
+                        }
+                    }
+                } else {
+                    hayError = true;
+                    mensajeError = 'Las operaciones seleccionadas deben ser del mismo PEDIDO y la misma SERIE\n' +
+                                'o de la misma SERIE/LOTE (en caso de ser PEDIDOS distintos)\ny Siempre los ANCHOS deben ser iguales';
+                    break;
+                }
             }
-            
-            if (ancho !== anchoBase) {
-                hayError = true;
-                mensajeError = 'Los anchos de las operaciones seleccionadas deben ser iguales';
-                break;
-            }
+
+            operacionesAAbrir += ' / ' + row.NumeroDocumento;
         }
 
         if (hayError) {
             return Swal.fire('Error de Validación', mensajeError, 'error');
         }
 
-        const operacionesNombres = selectedRows.map(r => r.NumeroDocumento).join(' / ');
+        // ✅ VALIDACIÓN 4: Contar operaciones a registrar (máximo 15)
+        try {
+            let cantARegistrar = 0;
+            for (const row of operacionesValidas) {
+                const response = await axiosInstance.get(`/registracion/operaciones/contar-registrar-embalaje/${row.Operacion_ID}`);
+                cantARegistrar += response.data.cantidad || 0;
+            }
+
+            if (cantARegistrar > 15) {
+                return Swal.fire(
+                    'Advertencia Embalaje',
+                    'Las operaciones seleccionadas tienen demasiadas operaciones involucradas\nDesmarque algunas para poder procesar.',
+                    'warning'
+                );
+            }
+        } catch (error) {
+            console.error('Error al contar operaciones:', error);
+        }
+
+        // ✅ CONFIRMAR PROCESAMIENTO
         const result = await Swal.fire({
             title: 'Confirma MULTIOPERACION',
-            html: `Se abrirán las Operaciones:<br>${operacionesNombres}<br>CONFIRMA?`,
+            html: `Se abrirán las Operaciones:<br><strong>${operacionesAAbrir}</strong><br>CONFIRMA?`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Sí',
-            cancelButtonText: 'No'
+            cancelButtonText: 'No',
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d'
         });
 
-        if (result.isConfirmed) {
-            const operacionesData = selectedRows.map(row => ({
+        if (!result.isConfirmed) return;
+
+        // ✅ PROCESAR MULTI-OPERACIÓN
+        Swal.fire({
+            title: 'Procesando...',
+            text: 'Creando Multi-Operación...',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        try {
+            // 1. Obtener último número de Multi-Operación
+            const responseUltima = await axiosInstance.get('/registracion/operaciones/ultima-multioperacion');
+            const ultimaMultiOp = responseUltima.data.ultimaMultiOperacion || 0;
+            const nuevaMultiOp = ultimaMultiOp + 1;
+
+            // 2. Procesar todas las operaciones
+            const operacionesData = operacionesValidas.map(row => ({
                 id: row.Operacion_ID,
                 nroBatch: row.NroBatch
             }));
-            try {
-                Swal.fire({ title: 'Procesando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-                const response = await axiosInstance.post('/registracion/operaciones/procesar', { operacionesData });
-                Swal.close();
-                await Swal.fire('Éxito', `Multi-Operación #${response.data.multiOperacionId} creada.`, 'success');
-                fetchOperaciones();
-            } catch (error) {
-                console.error('Error al procesar operaciones:', error);
-                Swal.fire('Error', error.response?.data?.error || 'No se pudo procesar la selección.', 'error');
+
+            const response = await axiosInstance.post('/registracion/operaciones/procesar-multioperacion', {
+                operacionesData,
+                numeroMultiOperacion: nuevaMultiOp,
+                maquina: maquinaId,
+                usuario: user?.nombre || 'sistema'
+            });
+
+            Swal.close();
+            
+            await Swal.fire(
+                'Éxito',
+                `Multi-Operación #${nuevaMultiOp} creada.\nOperaciones: ${operacionesAAbrir}`,
+                'success'
+            );
+
+            // 3. Recargar operaciones
+            await fetchOperaciones();
+            
+            // 4. Navegar al detalle de la primera operación
+            if (maquinaId === 'EMB') {
+                navigate(`/registracion/editar-embalaje/${primeraOperacion.Operacion_ID}`, {
+                    state: {
+                        numeroMultiOperacion: nuevaMultiOp,
+                        origen: 'ProcesarMultiOperacion'
+                    }
+                });
+            } else {
+                navigate(`/registracion/editar/${primeraOperacion.Operacion_ID}`, {
+                    state: {
+                        numeroMultiOperacion: nuevaMultiOp,
+                        origen: 'ProcesarMultiOperacion'
+                    }
+                });
             }
+
+        } catch (error) {
+            Swal.close();
+            console.error('Error al procesar:', error);
+            Swal.fire('Error', error.response?.data?.error || 'No se pudo procesar la selección.', 'error');
         }
     };
 
@@ -337,7 +492,7 @@ const OperacionesEmbalaje = () => {
         { name: 'Abas', selector: row => row.Abastecida === '0' ? 'OK' : '', width: '60px', center: true },
         { name: 'OpAnt', selector: row => row.OpAnteriorStatus || '', width: '60px', center: true },
         { name: 'Clientes', selector: row => row.Clientes || '', width: '150px', wrap: true },
-        { name: 'Cali', cell: row => <CaliIcon iconType={calcularEstadoYColorVB(row).caliIcon} />, width: '50px', center: true },
+        { name: 'Cali', cell: row => <CaliIcon iconType={calcularEstadoYColorVB(row).caliIcon} />, width: '70px', center: true },
         { name: 'Ancho', selector: row => formatNumber(row.Ancho), right: true, width: '70px' },
         { name: 'Flia.', selector: row => row.Familia || '', width: '50px', center: true },
         { name: 'Esp.', selector: row => row.Espesor || '', width: '60px', right: true },
@@ -347,21 +502,22 @@ const OperacionesEmbalaje = () => {
           sortable: true, 
           width: '100px' },
         { name: 'Consulta', 
-          cell: row => (
-            <button 
-              className="btn btn-xs btn-default border" 
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/registracion/detalle/${row.Operacion_ID}`, { 
-                    state: { operationStatus: calcularEstadoYColorVB(row), origen: "OperacionesEmbalaje" } 
-                });
-              }}
-            >
-              Ver
-            </button>
-          ), 
-          width: '80px', 
-          center: true 
+            cell: row => (
+                <button 
+                className="btn btn-xs btn-default border" 
+                onClick={(e) => {
+                    e.stopPropagation();
+                    // CAMBIAR: Navegar a consultar en lugar de detalle
+                    navigate(`/registracion/consultar-embalaje/${row.Operacion_ID}`, { 
+                        state: { operationStatus: calcularEstadoYColorVB(row), origen: "OperacionesEmbalaje" } 
+                    });
+                }}
+                >
+                Ver
+                </button>
+            ), 
+            width: '80px', 
+            center: true 
         },
         { name: 'Preembalaje', 
           selector: row => calcularEstadoYColorVB(row).preembalajeText, 
@@ -441,9 +597,12 @@ const OperacionesEmbalaje = () => {
         cells: { style: { padding: '2px' } }
     };
 
+    // ✅ FUNCIÓN CLAVE: SOLO permitir seleccionar filas VERDES
     const selectableRowDisabled = (row) => {
         const estado = calcularEstadoYColorVB(row);
-        return !estado.seleccionable;
+        // ✅ SOLO permitir seleccionar si es VERDE (#00FF00 o #7CFC00)
+        const esVerde = estado.backgroundColor === '#00FF00' || estado.backgroundColor === '#7CFC00';
+        return !esVerde; // Retorna true (deshabilitado) si NO es verde
     };
 
     return (

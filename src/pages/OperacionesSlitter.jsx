@@ -1407,33 +1407,37 @@ const OperacionesSlitter = () => {
         } catch (e) { return 'Fecha Inválida'; }
     };
 
+    // ✅ PARIDAD VB: el color es INFORMATIVO. Toda fila no-bloqueada abre el formulario EDITABLE.
+    //    La ruta /detalle/ queda SOLO para el botón "Ver".
     const handleRowClicked = (row) => {
-        console.log('Row clicked:', row.Operacion_ID, row.status, 'Stock:', row.Stock, 'Balanza:', row.Kilos_Balanza);
+        console.log('🟢 Row clicked (OperacionesSlitter v2):', row.Operacion_ID, '| status:', row.status);
         const { status, Stock, Kilos_Balanza, Operacion_ID } = row;
 
         switch (status) {
+            // ✅ GRIS y TODOS los AMARILLOS → /editar/
             case 'EN_PROCESO':
+            case 'EN_CALIDAD':
+            case 'CALIDAD_DICTAMINADA':
+            case 'TOLERANCIA_EXCEDIDA':
                 navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
                 break;
-            case 'TOLERANCIA_EXCEDIDA':
-                handlePesarClick(row);
-                break;
+
             case 'LISTA':
-                if (hasDiscrepancy(Stock, Kilos_Balanza)) {
-                    handlePesarClick(row);
-                }
+                if (hasDiscrepancy(Stock, Kilos_Balanza)) handlePesarClick(row);
+                else navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
                 break;
+
             case 'SUSPENDIDA':
-                if (hasDiscrepancy(Stock, Kilos_Balanza)) {
-                    handlePesarClick(row);
-                } else {
-                    navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
-                }
+                if (hasDiscrepancy(Stock, Kilos_Balanza)) handlePesarClick(row);
+                else navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
                 break;
+
             case 'BLOQUEADA':
-                break;
+                break;   // rojo: no abre, igual que VB
+
+            // ✅ default TAMBIÉN a editar: ningún estado debe caer en /detalle/ por accidente
             default:
-                navigate(`/registracion/detalle/${Operacion_ID}`, { state: { operationStatus: status } });
+                navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
                 break;
         }
     };

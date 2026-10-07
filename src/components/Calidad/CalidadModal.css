@@ -1,0 +1,58 @@
+/* =====================================================================
+   FIX EMBALAJE: PesajeEmbalajeModal.css pisa las clases compartidas de
+   este modal cuando se abre desde Embalaje. Estas reglas con scope
+   .calidad-overlay tienen mayor especificidad y restauran el diseño
+   correcto (idéntico al de Slitter) sin afectar ninguna otra pantalla.
+   ===================================================================== */
+.calidad-overlay.pesaje-modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;      /* ✅ centrado VERTICAL */
+    justify-content: center !important;  /* ✅ centrado HORIZONTAL */
+    overflow: auto !important;
+    background: rgba(0, 0, 0, .5) !important;
+    z-index: 1050 !important;
+}
+
+.calidad-overlay .pesaje-modal { width: 860px !important; max-width: 96vw !important; background: #f4f6f8 !important; border-radius: 6px !important; display: flex !important; flex-direction: column !important; }
+
+.calidad-overlay .pesaje-modal .modal-header { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; background: #007bff !important; color: #fff !important; padding: 12px 16px !important; border-radius: 6px 6px 0 0 !important; }
+.calidad-overlay .pesaje-modal .modal-header h3 { margin: 0 !important; color: #fff !important; font-size: 17px !important; font-weight: 700 !important; }
+.calidad-overlay .pesaje-modal .modal-header button { background: #fff !important; color: #000 !important; border: 1px solid #999 !important; border-radius: 3px !important; font-size: 14px !important; line-height: 1 !important; padding: 2px 7px !important; cursor: pointer !important; }
+
+.calidad-overlay .pesaje-modal .modal-body { padding: 16px !important; background: #f4f6f8 !important; display: block !important; }
+
+.calidad-overlay .pesaje-modal .info-panel { background: #f5f5dc !important; border: none !important; padding: 12px 14px !important; margin-bottom: 14px !important; font-size: 13px !important; display: block !important; }
+.calidad-overlay .pesaje-modal .info-panel div { margin: 2px 0 !important; }
+
+/* --- Sección de defectos: sin el recuadro/blanco que inyecta Embalaje --- */
+.calidad-overlay .pesaje-modal .pesaje-section { border: none !important; background: transparent !important; padding: 0 !important; margin: 0 0 14px 0 !important; display: block !important; box-shadow: none !important; }
+
+.calidad-overlay .defectos-form { display: flex !important; flex-direction: row !important; gap: 18px !important; align-items: flex-start !important; border: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }
+
+.calidad-overlay .defectos-col-combos { flex: 0 0 46% !important; display: grid !important; grid-template-columns: 90px 1fr !important; gap: 10px 10px !important; align-items: center !important; }
+.calidad-overlay .defectos-col-combos label { display: block !important; margin: 0 !important; font-weight: 700 !important; font-size: 14px !important; color: #000 !important; }
+.calidad-overlay .defectos-col-combos select { width: 100% !important; height: 34px !important; font-size: 13px !important; margin: 0 !important; }
+
+.calidad-overlay .defectos-col-nota { flex: 1 !important; display: flex !important; flex-direction: column !important; gap: 0 !important; }
+.calidad-overlay .nota-row { display: flex !important; flex-direction: row !important; gap: 10px !important; align-items: flex-start !important; margin: 0 !important; }
+.calidad-overlay .nota-row label { flex: 0 0 auto !important; font-weight: 700 !important; font-size: 14px !important; margin: 0 !important; padding-top: 4px !important; }
+.calidad-overlay .nota-row textarea { flex: 1 !important; width: 100% !important; min-height: 96px !important; font-size: 13px !important; margin: 0 !important; }
+
+.calidad-overlay .btn-confirma-defecto { align-self: flex-end !important; margin-top: 10px !important; background: #2196f3 !important; color: #fff !important; border: none !important; padding: 9px 16px !important; font-weight: 700 !important; border-radius: 4px !important; cursor: pointer !important; }
+
+/* --- Grilla de defectos y footer con el look correcto --- */
+.calidad-overlay .grilla-atados h4 { font-size: 20px !important; font-weight: 400 !important; margin: 6px 0 10px 0 !important; color: #000 !important; }
+.calidad-overlay .grilla-atados table { width: 100% !important; border-collapse: collapse !important; background: #fff !important; }
+.calidad-overlay .grilla-atados th,
+.calidad-overlay .grilla-atados td { border: 1px solid #ddd !important; padding: 8px 10px !important; font-size: 13px !important; text-align: left !important; }
+
+.calidad-overlay .modal-footer { display: flex !important; flex-direction: row !important; justify-content: space-around !important; align-items: center !important; padding: 12px 16px !important; background: #e9ecef !important; border-radius: 0 0 6px 6px !important; }

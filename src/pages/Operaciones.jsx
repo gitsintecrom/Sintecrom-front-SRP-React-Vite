@@ -351,40 +351,174 @@ const Operaciones = () => {
         } catch (e) { return 'Fecha Inválida'; }
     };
 
+    // const handleRowClicked = (row) => {
+    //     console.log('Row clicked:', row.Operacion_ID, row.status, 'Stock:', row.Stock, 'Balanza:', row.Kilos_Balanza);
+    //     const { status, Stock, Kilos_Balanza, Operacion_ID, maquinaId } = row;
+
+    //     switch (status) {
+    //         case 'EN_PROCESO':
+    //             navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
+    //             break;
+    //         case 'TOLERANCIA_EXCEDIDA':
+    //             handlePesarClick(row); // Ir al modal de pesaje
+    //             break;
+    //         case 'LISTA':
+    //             if (hasDiscrepancy(Stock, Kilos_Balanza)) {
+    //                 handlePesarClick(row); // Ir al modal de pesaje
+    //             }
+    //             // Si no hay discrepancia, no hace nada (según el requisito)
+    //             break;
+    //         case 'SUSPENDIDA':
+    //             if (hasDiscrepancy(Stock, Kilos_Balanza)) {
+    //                 handlePesarClick(row); // Ir al modal de pesaje
+    //             } else {
+    //                 navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
+    //             }
+    //             break;
+    //         case 'BLOQUEADA':
+    //             // No hace nada
+    //             break;
+    //         default:
+    //             // Por defecto, si no coincide con los estados anteriores o si es un estado que no tiene una acción específica
+    //             navigate(`/registracion/detalle/${Operacion_ID}`, { state: { operationStatus: status } });
+    //             break;
+    //     }
+    // };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //     // ✅ PARIDAD VB: el color de la fila es INFORMATIVO.
+    // //    Gris y TODOS los amarillos abren el MISMO formulario de edición.
+    // //    Solo ROJO (bloqueada) no abre nada; el resto conserva su flujo actual.
+    // const handleRowClicked = (row) => {
+    //     console.log('🟢 Row clicked:', row.Operacion_ID, '| status:', row.status);
+    //     const { status, Stock, Kilos_Balanza, Operacion_ID } = row;
+
+    //     // switch (status) {
+    //     //     // ✅ GRIS y AMARILLOS → formulario de EDICIÓN (antes el amarillo iba a /detalle o al modal de pesada)
+    //     //     case 'EN_PROCESO':
+    //     //     case 'EN_CALIDAD':
+    //     //     case 'CALIDAD_DICTAMINADA':
+    //     //     case 'TOLERANCIA_EXCEDIDA':
+    //     //         navigate(`/registracion/editar/${Operacion_ID}`, {
+    //     //             state: { operationStatus: status, origen: 'Operaciones' }
+    //     //         });
+    //     //         break;
+
+    //     //     case 'LISTA':
+    //     //         // Verde cerrada: solo pesada si hay discrepancia stock/balanza (flujo de abastecimiento)
+    //     //         if (hasDiscrepancy(Stock, Kilos_Balanza)) {
+    //     //             handlePesarClick(row);
+    //     //         }
+    //     //         break;
+
+    //     //     case 'SUSPENDIDA':
+    //     //         if (hasDiscrepancy(Stock, Kilos_Balanza)) {
+    //     //             handlePesarClick(row);
+    //     //         } else {
+    //     //             navigate(`/registracion/editar/${Operacion_ID}`, {
+    //     //                 state: { operationStatus: status, origen: 'Operaciones' }
+    //     //             });
+    //     //         }
+    //     //         break;
+
+    //     //     case 'BLOQUEADA':
+    //     //         // Rojo: no se abre, igual que VB
+    //     //         break;
+
+    //     //     default:
+    //     //         navigate(`/registracion/detalle/${Operacion_ID}`, {
+    //     //             state: { operationStatus: status }
+    //     //         });
+    //     //         break;
+    //     // }
+
+
+
+    //     switch (status) {
+    //         // ✅ VB: gris y TODOS los amarillos abren el MISMO formulario editable
+    //         case 'EN_PROCESO':
+    //         case 'EN_CALIDAD':
+    //         case 'CALIDAD_DICTAMINADA':
+    //         case 'TOLERANCIA_EXCEDIDA':
+    //             navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
+    //             break;
+    //         case 'LISTA':
+    //             if (hasDiscrepancy(Stock, Kilos_Balanza)) handlePesarClick(row);
+    //             else navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
+    //             break;
+    //         case 'SUSPENDIDA':
+    //             if (hasDiscrepancy(Stock, Kilos_Balanza)) handlePesarClick(row);
+    //             else navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
+    //             break;
+    //         case 'BLOQUEADA':
+    //             break;   // rojo: no abre, igual que VB
+    //         default:
+    //             // navigate(`/registracion/detalle/${Operacion_ID}`, { state: { operationStatus: status, soloLectura: true } });
+    //             break;
+    //     }
+    // };
+
+
+
+
+
+
+
+        // ✅ PARIDAD VB (frmOperacionesSlitter): el color de la fila es INFORMATIVO.
+    //    Toda fila no-bloqueada abre el MISMO frmDetalleSlitter editable.
     const handleRowClicked = (row) => {
-        console.log('Row clicked:', row.Operacion_ID, row.status, 'Stock:', row.Stock, 'Balanza:', row.Kilos_Balanza);
-        const { status, Stock, Kilos_Balanza, Operacion_ID, maquinaId } = row;
+        console.log('🟢 Row clicked (Slitter):', row.Operacion_ID, '| status:', row.status);
+        const { status, Stock, Kilos_Balanza, Operacion_ID } = row;
 
         switch (status) {
+            // ✅ GRIS y TODOS los AMARILLOS → formulario de EDICIÓN
             case 'EN_PROCESO':
+            case 'EN_CALIDAD':
+            case 'CALIDAD_DICTAMINADA':
+            case 'TOLERANCIA_EXCEDIDA':
                 navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
                 break;
-            case 'TOLERANCIA_EXCEDIDA':
-                handlePesarClick(row); // Ir al modal de pesaje
-                break;
+
             case 'LISTA':
-                if (hasDiscrepancy(Stock, Kilos_Balanza)) {
-                    handlePesarClick(row); // Ir al modal de pesaje
-                }
-                // Si no hay discrepancia, no hace nada (según el requisito)
+                // Verde cerrada: pesada de abastecimiento solo si hay discrepancia stock/balanza
+                if (hasDiscrepancy(Stock, Kilos_Balanza)) handlePesarClick(row);
+                else navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
                 break;
+
             case 'SUSPENDIDA':
-                if (hasDiscrepancy(Stock, Kilos_Balanza)) {
-                    handlePesarClick(row); // Ir al modal de pesaje
-                } else {
-                    navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
-                }
+                if (hasDiscrepancy(Stock, Kilos_Balanza)) handlePesarClick(row);
+                else navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
                 break;
+
             case 'BLOQUEADA':
-                // No hace nada
-                break;
+                break;   // Rojo: no abre, igual que VB
+
             default:
-                // Por defecto, si no coincide con los estados anteriores o si es un estado que no tiene una acción específica
-                navigate(`/registracion/detalle/${Operacion_ID}`, { state: { operationStatus: status } });
+                navigate(`/registracion/editar/${Operacion_ID}`, { state: { operationStatus: status } });
                 break;
         }
     };
 
+
+
+
+
+
+    
     const columns = useMemo(() => [
         { name: 'Nº Op.', selector: row => row.NumeroDocumento, sortable: true, width: '150px', wrap: true },
         { name: 'Serie/Lote', selector: row => row.Origen_Lote.substring(0, 11), sortable: true, width: '110px' },

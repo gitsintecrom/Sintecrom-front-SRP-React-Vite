@@ -1,0 +1,82 @@
+/* ==== Overlay apilado y centrado ==== */
+.pesaje-modal-overlay.calidad-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 4000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.pesaje-modal-overlay.calidad-overlay .pesaje-modal {
+    margin: auto;
+    width: 860px;
+    max-width: 95vw;
+    max-height: 92vh;
+    overflow-y: auto;
+}
+
+/* ✅ La sección del formulario ocupa TODO el ancho (igual que el box amarillo) */
+.calidad-overlay .pesaje-section {
+    display: block;
+    width: 100%;
+}
+
+/* ✅ GRID: columna 1 = combos (auto) | columna 2 = Nota (1fr = todo el resto) */
+.defectos-form {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.defectos-col-combos {
+    display: grid;
+    grid-template-columns: 70px 230px;
+    gap: 8px;
+    align-items: center;
+}
+.defectos-col-combos select {
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0 6px;
+    background: #fff;
+}
+.defectos-col-combos select:disabled {
+    background: #e9e9e9;
+}
+
+/* ✅ Columna de la Nota: se estira hasta el borde derecho del modal */
+.defectos-col-nota {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+}
+.nota-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    width: 100%;
+}
+.defectos-col-nota textarea {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;   /* que el padding no lo haga pasarse del borde */
+    height: 90px;
+    resize: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px;
+}
+
+/* Botón debajo de la Nota, alineado a la derecha (ahora al borde real) */
+.btn-confirma-defecto {
+    align-self: flex-end;
+}
