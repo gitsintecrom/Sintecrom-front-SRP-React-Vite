@@ -2913,7 +2913,7 @@ const EditarOperacion = () => {
                     {!CAN_EDIT && (
                         <div className="alert alert-warning py-2 mb-2" style={{ fontWeight: 'bold' }}>
                             <i className="fas fa-clipboard-check mr-2"></i>
-                            Inspección inicial pendiente: la grilla de pesajes, Tolerancias y el CIERRE permanecen bloqueados (como en el VB) hasta aprobar el INICIO DE CORTE en Inspección.
+                            Inspección inicial pendiente: la grilla de pesajes, Tolerancias y el CIERRE permanecen bloqueados hasta aprobar el INICIO DE CORTE en Inspección.
                         </div>
                     )}
 

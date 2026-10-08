@@ -126,15 +126,164 @@ const Abastecimiento = () => {
     });
   };
 
+  // const showPesadaForm = (row) => {
+  //   const pesadasAcumuladas = [];
+  //   let pollingInterval = null;
+  //   let isManualEdit = false; // Flag para detectar edición manual
+
+  //   const updateTotalDisplay = () => {
+  //     const total = pesadasAcumuladas.reduce((sum, val) => sum + val, 0);
+  //     const totalElement = Swal.getHtmlContainer()?.querySelector('#swal-total-display');
+  //     if (totalElement) totalElement.textContent = total.toFixed(3);
+  //   };
+
+  //   Swal.fire({
+  //     title: 'Registrar Pesada',
+  //     width: '600px',
+  //     html: `
+  //       <div class="text-left p-2">
+  //         <p class="mb-1"><strong>Operación:</strong> ${row.NumeroDocumento}</p>
+  //         <p><strong>Serie/Lote:</strong> ${row.Origen_Lote ? row.Origen_Lote.substring(0, 11) : ''}</p><hr/>
+  //         <div class="form-group row align-items-center">
+  //           <label for="swal-pesada" class="col-sm-3 col-form-label text-right">Balanza:</label>
+  //           <div class="col-sm-9">
+  //             <input type="number" id="swal-pesada" class="swal2-input m-0" placeholder="Esperando lectura o ingrese manual..." step="0.001">
+  //           </div>
+  //         </div>
+  //         <div class="form-group row align-items-center">
+  //           <label class="col-sm-3 col-form-label text-right">Total:</label>
+  //           <div class="col-sm-9 d-flex justify-content-start"><strong id="swal-total-display" style="font-size: 1.5rem; padding-left: 10px;">0.000</strong></div>
+  //         </div>
+  //         <hr/>
+  //         <div class="d-flex justify-content-center">
+  //           <button id="btn-limpiar-ultimo" class="btn btn-warning mx-2">Limpia Últ.</button>
+  //           <button id="btn-limpiar-todo" class="btn btn-danger mx-2">Limpia Todo</button>
+  //         </div>
+  //       </div>`,
+  //     showDenyButton: true,
+  //     showCancelButton: true,
+  //     confirmButtonText: '<i class="far fa-save"></i> Guardar',
+  //     denyButtonText: '<i class="fas fa-plus"></i> Acumular',
+  //     cancelButtonText: 'Cancelar',
+  //     didOpen: () => {
+  //       const agenteUrl = import.meta.env.VITE_AGENT_BALANZA_URL || 'http://localhost:12345';
+  //       const pesadaInput = document.getElementById('swal-pesada');
+        
+  //       // Detectar cuando el usuario empieza a editar manualmente
+  //       pesadaInput.addEventListener('input', () => {
+  //         isManualEdit = true;
+  //       });
+        
+  //       // Cuando el input recibe foco, pausar actualizaciones automáticas
+  //       pesadaInput.addEventListener('focus', () => {
+  //         isManualEdit = true;
+  //       });
+        
+  //       // Cuando pierde el foco, permitir nuevas lecturas después de un tiempo
+  //       pesadaInput.addEventListener('blur', () => {
+  //         setTimeout(() => {
+  //           isManualEdit = false;
+  //         }, 2000);
+  //       });
+
+  //       pollingInterval = setInterval(async () => {
+  //         // Si el usuario está editando manualmente, NO sobrescribir
+  //         if (isManualEdit) return;
+
+  //         try {
+  //           const response = await axios.get(`${agenteUrl}/peso`);
+  //           if (response.data?.success && pesadaInput) {
+  //             // Solo actualizar si el input está vacío o no tiene foco
+  //             if (document.activeElement !== pesadaInput && !pesadaInput.value) {
+  //               pesadaInput.value = response.data.peso;
+  //             }
+  //           }
+  //         } catch (error) {
+  //           // Silenciar errores de conexión
+  //         }
+  //       }, 1200);
+
+  //       document.getElementById('btn-limpiar-ultimo')?.addEventListener('click', () => {
+  //         if (pesadasAcumuladas.length > 0) { 
+  //           pesadasAcumuladas.pop(); 
+  //           updateTotalDisplay(); 
+  //         }
+  //       });
+        
+  //       document.getElementById('btn-limpiar-todo')?.addEventListener('click', () => {
+  //         pesadasAcumuladas.length = 0; 
+  //         updateTotalDisplay();
+  //       });
+  //     },
+  //     willClose: () => {
+  //       clearInterval(pollingInterval);
+  //     },
+  //     preDeny: () => {
+  //       const pesadaInput = Swal.getHtmlContainer()?.querySelector('#swal-pesada');
+  //       if (!pesadaInput) return false;
+  //       const valorActual = parseFloat(pesadaInput.value) || 0;
+        
+  //       if (valorActual > 0) {
+  //         pesadasAcumuladas.push(valorActual);
+  //         updateTotalDisplay();
+  //         pesadaInput.value = '';
+  //         pesadaInput.placeholder = '0.000';
+  //         isManualEdit = false; // Resetear flag después de acumular
+  //       }
+  //       return false;
+  //     },
+  //     preConfirm: () => {
+  //       const pesadaInput = Swal.getHtmlContainer()?.querySelector('#swal-pesada');
+  //       const valorActual = parseFloat(pesadaInput.value) || 0;
+  //       const totalAnterior = pesadasAcumuladas.reduce((sum, val) => sum + val, 0);
+  //       // Si hay algo en el input que no se acumuló, lo sumamos al total final
+  //       const totalFinal = totalAnterior + valorActual;
+  //       return totalFinal.toFixed(3);
+  //     },
+  //   }).then(async (result) => {
+  //     if (result.isConfirmed) {
+  //       const kilosFinales = parseFloat(result.value);
+  //       if (kilosFinales <= 0) {
+  //         Swal.fire('Atención', 'El peso a registrar debe ser mayor a cero.', 'warning');
+  //         return;
+  //       }
+  //       try {
+  //         await axiosInstance.post('/abastecimiento/pesar', { operacionId: row.Operacion_ID, kilosBalanza: kilosFinales });
+  //         setOperaciones(prev => prev.map(op => op.Operacion_ID === row.Operacion_ID ? { ...op, Kilos_Balanza: kilosFinales.toString() } : op));
+  //         Swal.fire('¡Guardado!', `Se han registrado ${kilosFinales} Kg.`, 'success');
+  //       } catch (error) {
+  //         Swal.fire('Error', error.response?.data?.error || 'No se pudo registrar la pesada.', 'error');
+  //       }
+  //     }
+  //   });
+  // };
+
+
   const showPesadaForm = (row) => {
     const pesadasAcumuladas = [];
     let pollingInterval = null;
     let isManualEdit = false; // Flag para detectar edición manual
 
+    const getTotal = () => pesadasAcumuladas.reduce((sum, val) => sum + val, 0);
+
     const updateTotalDisplay = () => {
-      const total = pesadasAcumuladas.reduce((sum, val) => sum + val, 0);
+      const total = getTotal();
       const totalElement = Swal.getHtmlContainer()?.querySelector('#swal-total-display');
       if (totalElement) totalElement.textContent = total.toFixed(3);
+    };
+
+    // ✅ Aviso vivo: peso en balanza que todavía NO entró al Total
+    const updateHint = () => {
+      const hint = Swal.getHtmlContainer()?.querySelector('#swal-hint');
+      const input = Swal.getHtmlContainer()?.querySelector('#swal-pesada');
+      if (!hint || !input) return;
+      const val = parseFloat(input.value) || 0;
+      if (val > 0) {
+        hint.style.display = 'block';
+        hint.innerHTML = `⚠️ Balanza con <b>${val.toFixed(3)} Kg</b> sin acumular. <b>Guardar</b> envía solo el <b>Total</b>; use <b>Acumular</b> para sumarla.`;
+      } else {
+        hint.style.display = 'none';
+      }
     };
 
     Swal.fire({
@@ -154,6 +303,7 @@ const Abastecimiento = () => {
             <label class="col-sm-3 col-form-label text-right">Total:</label>
             <div class="col-sm-9 d-flex justify-content-start"><strong id="swal-total-display" style="font-size: 1.5rem; padding-left: 10px;">0.000</strong></div>
           </div>
+          <div id="swal-hint" class="text-warning small mt-1 mb-2" style="display:none;"></div>
           <hr/>
           <div class="d-flex justify-content-center">
             <button id="btn-limpiar-ultimo" class="btn btn-warning mx-2">Limpia Últ.</button>
@@ -168,17 +318,18 @@ const Abastecimiento = () => {
       didOpen: () => {
         const agenteUrl = import.meta.env.VITE_AGENT_BALANZA_URL || 'http://localhost:12345';
         const pesadaInput = document.getElementById('swal-pesada');
-        
+
         // Detectar cuando el usuario empieza a editar manualmente
         pesadaInput.addEventListener('input', () => {
           isManualEdit = true;
+          updateHint();
         });
-        
+
         // Cuando el input recibe foco, pausar actualizaciones automáticas
         pesadaInput.addEventListener('focus', () => {
           isManualEdit = true;
         });
-        
+
         // Cuando pierde el foco, permitir nuevas lecturas después de un tiempo
         pesadaInput.addEventListener('blur', () => {
           setTimeout(() => {
@@ -186,16 +337,15 @@ const Abastecimiento = () => {
           }, 2000);
         });
 
+        // ✅ POLLING IGUAL AL TUYO (el que sí deja entrar la balanza)
         pollingInterval = setInterval(async () => {
-          // Si el usuario está editando manualmente, NO sobrescribir
           if (isManualEdit) return;
-
           try {
             const response = await axios.get(`${agenteUrl}/peso`);
             if (response.data?.success && pesadaInput) {
-              // Solo actualizar si el input está vacío o no tiene foco
               if (document.activeElement !== pesadaInput && !pesadaInput.value) {
                 pesadaInput.value = response.data.peso;
+                updateHint();
               }
             }
           } catch (error) {
@@ -204,14 +354,14 @@ const Abastecimiento = () => {
         }, 1200);
 
         document.getElementById('btn-limpiar-ultimo')?.addEventListener('click', () => {
-          if (pesadasAcumuladas.length > 0) { 
-            pesadasAcumuladas.pop(); 
-            updateTotalDisplay(); 
+          if (pesadasAcumuladas.length > 0) {
+            pesadasAcumuladas.pop();
+            updateTotalDisplay();
           }
         });
-        
+
         document.getElementById('btn-limpiar-todo')?.addEventListener('click', () => {
-          pesadasAcumuladas.length = 0; 
+          pesadasAcumuladas.length = 0;
           updateTotalDisplay();
         });
       },
@@ -222,42 +372,40 @@ const Abastecimiento = () => {
         const pesadaInput = Swal.getHtmlContainer()?.querySelector('#swal-pesada');
         if (!pesadaInput) return false;
         const valorActual = parseFloat(pesadaInput.value) || 0;
-        
+
         if (valorActual > 0) {
           pesadasAcumuladas.push(valorActual);
           updateTotalDisplay();
           pesadaInput.value = '';
           pesadaInput.placeholder = '0.000';
           isManualEdit = false; // Resetear flag después de acumular
+          updateHint();
         }
         return false;
       },
+      // ✅✅ ÚNICO CAMBIO REAL: Guardar envía SOLO el Total acumulado.
+      //    El input de Balanza ya no suma nada (para eso está Acumular).
       preConfirm: () => {
-        const pesadaInput = Swal.getHtmlContainer()?.querySelector('#swal-pesada');
-        const valorActual = parseFloat(pesadaInput.value) || 0;
-        const totalAnterior = pesadasAcumuladas.reduce((sum, val) => sum + val, 0);
-        // Si hay algo en el input que no se acumuló, lo sumamos al total final
-        const totalFinal = totalAnterior + valorActual;
-        return totalFinal.toFixed(3);
+        return getTotal().toFixed(3);
       },
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const kilosFinales = parseFloat(result.value);
-        if (kilosFinales <= 0) {
-          Swal.fire('Atención', 'El peso a registrar debe ser mayor a cero.', 'warning');
-          return;
-        }
+        const kilosFinales = parseFloat(result.value) || 0;
         try {
           await axiosInstance.post('/abastecimiento/pesar', { operacionId: row.Operacion_ID, kilosBalanza: kilosFinales });
           setOperaciones(prev => prev.map(op => op.Operacion_ID === row.Operacion_ID ? { ...op, Kilos_Balanza: kilosFinales.toString() } : op));
-          Swal.fire('¡Guardado!', `Se han registrado ${kilosFinales} Kg.`, 'success');
+          if (kilosFinales > 0) {
+            Swal.fire('¡Guardado!', `Se han registrado ${kilosFinales} Kg (TOTAL ACUMULADO).`, 'success');
+          } else {
+            Swal.fire('Guardado', 'Se registró 0 Kg: el Total acumulado estaba vacío. Use Acumular para sumar la lectura de balanza antes de Guardar.', 'info');
+          }
         } catch (error) {
           Swal.fire('Error', error.response?.data?.error || 'No se pudo registrar la pesada.', 'error');
         }
       }
     });
   };
-  
+
   const columns = useMemo(() => [
     {
       name: 'Abastecido',
