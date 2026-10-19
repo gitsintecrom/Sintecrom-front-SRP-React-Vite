@@ -192,6 +192,8 @@ const OperacionesEmbalaje = () => {
         try {
             const response = await axiosInstance.get(`/registracion/operaciones/embalaje/${maquinaId}`);
             setOperaciones(response.data);
+            console.log("Resultado embalaje:   ", response.data);
+            
         } catch (error) {
             console.error("Error al cargar operaciones:", error);
             Swal.fire('Error', 'Error al cargar datos.', 'error');
@@ -480,8 +482,9 @@ const OperacionesEmbalaje = () => {
     };
 
     const columns = useMemo(() => [
-        { name: 'Nro. Pedido', selector: row => row.NumeroPedido || '', sortable: true, width: '90px', wrap: true },
-        { name: 'Nro. Item', selector: row => row.NumeroItem || '', sortable: true, width: '70px', wrap: true },
+        { name: 'Nro. Pedido', selector: row => row.NumeroPedido || '', sortable: true, width: '120px', wrap: true },
+        { name: 'Nro. Item', selector: row => row.NumeroItem || '', sortable: true, width: '100px', wrap: true },
+        { name: 'Planta', selector: row => row.Planta || '', sortable: true, width: '120px', wrap: true },
         { name: 'Nº Operación', selector: row => row.NumeroDocumento || '', sortable: true, width: '130px', wrap: true },
         { name: 'Serie/Lote', selector: row => row.Origen_Lote?.substring(0, 11) || '', sortable: true, width: '110px', wrap: true },
         { name: 'Nro. MultiOp.', selector: row => row.NumeroMultiOperacion || '', sortable: true, width: '100px', wrap: true },
