@@ -879,6 +879,8 @@ const Calidad = () => {
                 params: { maquina: maquinaFiltro, verDefectosSobreorden: verDefectosSobreorden }
             });
             setOperaciones(response.data);
+            console.log("Respuesta Operaciones Calidad... ",response.data);
+            
         } catch (err) {
             console.error('Error al cargar operaciones:', err);
             setError('Error al cargar operaciones: ' + (err.response?.data?.error || err.message));
@@ -901,6 +903,7 @@ const Calidad = () => {
     const columns = useMemo(() => [
         { name: 'Máquina', selector: row => row.Maquina, sortable: true, width: '8%', style: { fontWeight: 'bold', fontSize: '12px' } },
         { name: 'Tarea', selector: row => row.Tarea, sortable: true, width: '12%', style: { fontSize: '12px' } },
+        { name: 'Planta', selector: row => row.Planta, sortable: true, width: '12%', style: { fontSize: '12px' } },
         { name: 'Nro. Batch', selector: row => row.NroBatch, sortable: true, width: '10%', style: { fontSize: '12px' } },
         { name: 'Cuchillas', selector: row => row.Cuchillas, sortable: true, width: '15%', style: { fontSize: '12px' } },
         { name: 'Serie/Lote Saliente', selector: row => row.SerieLote, sortable: true, width: '18%', style: { fontSize: '12px' } },
