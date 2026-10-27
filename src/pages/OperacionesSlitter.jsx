@@ -1127,8 +1127,27 @@ const OperacionesSlitter = () => {
 
     const maquinaInfo = useMemo(() => maquinas.find(m => m.id === maquinaId) || { nombre: 'Desconocida' }, [maquinaId]);
 
+    // const fetchOperaciones = async () => {
+    //     if (!maquinaId) return;
+    //     setLoading(true);
+    //     try {
+    //         const response = await axiosInstance.get(`/registracion/operaciones/${maquinaId}`);
+    //         setOperaciones(response.data);
+    //     } catch (error) {
+    //         Swal.fire('Error', 'No se pudieron cargar las operaciones.', 'error');
+    //         setOperaciones([]);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
+
+
+    // Arriba, junto a los otros useState
+    const [modalAbierto, setModalAbierto] = useState(false);
+
     const fetchOperaciones = async () => {
-        if (!maquinaId) return;
+        if (!maquinaId || modalAbierto) return;  // ⛔ No refrescar si hay modal abierto
         setLoading(true);
         try {
             const response = await axiosInstance.get(`/registracion/operaciones/${maquinaId}`);
@@ -1143,7 +1162,7 @@ const OperacionesSlitter = () => {
     
     useEffect(() => {
         fetchOperaciones();
-        const interval = setInterval(fetchOperaciones, 300000);
+        const interval = setInterval(fetchOperaciones, 10000);
         console.log("MaquinaId.....", maquinaId);
         return () => clearInterval(interval);
     }, [maquinaId]);
@@ -1197,6 +1216,7 @@ const OperacionesSlitter = () => {
     };
 
     const showPesadaForm = (row) => {
+        setModalAbierto(true);
         const pesadasAcumuladas = [];
         let pollingInterval = null;
 
@@ -1258,6 +1278,7 @@ const OperacionesSlitter = () => {
             },
             willClose: () => {
                 clearInterval(pollingInterval);
+                setModalAbierto(false); 
             },
             preDeny: () => {
                 const pesadaInput = Swal.getHtmlContainer()?.querySelector('#swal-pesada');

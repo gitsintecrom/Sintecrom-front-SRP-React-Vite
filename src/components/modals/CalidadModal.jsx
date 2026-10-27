@@ -1998,44 +1998,7 @@ const CalidadModal = ({
         setDefectos(prev => prev.filter((_, i) => i !== index));
     };
 
-    // const borrar = async (index) => {
-    //     const listaPrev = defectos;
-    //     const nuevaLista = listaPrev.filter((_, i) => i !== index);
-    //     setDefectos(nuevaLista);
-    //     setGuardando(true);
-    //     try {
-    //         await sincronizarLista(nuevaLista);
-    //         Swal.fire({
-    //             icon: 'success',
-    //             title: 'Defecto eliminado',
-    //             text: 'Se quitó de la grilla y de la base de datos.',
-    //             toast: true, position: 'top-end', timer: 2000, showConfirmButton: false,
-    //         });
-    //     } catch (e) {
-    //         console.error('Error al sincronizar el borrado:', e);
-    //         setDefectos(listaPrev);
-    //         Swal.fire('Error', 'No se pudo eliminar el defecto de la base de datos: ' + (e.response?.data?.error || e.message), 'error');
-    //     } finally {
-    //         setGuardando(false);
-    //     }
-    // };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // ✅✅ 🗑️ = DELETE directo de la fila en dbo.CalidadFinal por su ID.
+    // ✅✅ 🗑️ = DELETE directo de la fila en dbo.CalidadFinal por su ID.
     //    Ni SPs ni re-syncs: se borra la fila seleccionada y punto.
     const borrar = async (index) => {
         const d = defectos[index];
