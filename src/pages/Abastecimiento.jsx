@@ -285,6 +285,7 @@ const Abastecimiento = () => {
     { name: 'Nº Operación', selector: row => row.NumeroDocumento, sortable: true, wrap: true, width: '150px' },
     { name: 'Serie/Lote', selector: row => { const v = row.Origen_Lote; return v ? v.substring(0, v.length > 10 ? 11 : 10) : ''; }, sortable: true },
     { name: 'Tarea', selector: row => row.Tarea, sortable: true, width: '130px' },
+    { name: 'Planta', selector: row => row.Planta, sortable: true, width: '130px' },
     { 
       name: 'Stock', 
       selector: row => parseFloat(row.Stock || 0), 
