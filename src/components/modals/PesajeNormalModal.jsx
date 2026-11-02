@@ -980,7 +980,7 @@ const PesajeNormalModal = ({ lineaData, operacionId, codigoProducto, onClose, on
                         }
                         
                         .logo-y-serie > span {
-                            font-size: 32pt;
+                            font-size: 18pt;
                             font-weight: bold;
                             text-align: center;
                             flex-grow: 1;
@@ -1051,7 +1051,7 @@ const PesajeNormalModal = ({ lineaData, operacionId, codigoProducto, onClose, on
                         .codigo-completo {
                             grid-column: 5 / 8;
                             grid-row: 3 / 5;
-                            font-size: 8px;
+                            font-size: 12px;
                             font-weight: normal;
                             letter-spacing: 0.1px;
                             padding: 2px 4px;
