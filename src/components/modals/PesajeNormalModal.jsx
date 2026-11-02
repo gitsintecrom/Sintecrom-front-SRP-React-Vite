@@ -595,6 +595,7 @@ import axiosInstance from '../../api/axiosInstance';
 import Swal from 'sweetalert2';
 import CalidadModal from './CalidadModal';
 import '../PesajeModal.css';
+import logoUrl from '../../assets/Logo1.jpg';   // ✅ NUEVO: Vite lo inlinea como data:URL (<4KB)
 
 const PesajeNormalModal = ({ lineaData, operacionId, codigoProducto, onClose, onSuccess }) => {
     const [peso, setPeso] = useState(0);
@@ -791,7 +792,7 @@ const PesajeNormalModal = ({ lineaData, operacionId, codigoProducto, onClose, on
                         <!-- Header con logo y serie-lote -->
                         <div class="header-contenedor">
                             <div class="logo-y-serie">
-                                <img src="/Logo1.jpg" alt="Logo Sintecrom" class="logo">
+                                <img src="${logoUrl}" alt="Logo Sintecrom" class="logo">
                                 <span class="serie-lote">${labelData.parSerieLote}</span>
                             </div>
                         </div>
