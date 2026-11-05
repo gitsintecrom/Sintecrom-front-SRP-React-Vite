@@ -6217,10 +6217,67 @@ const EditarOperacionEmbalaje = () => {
                                     <div
                                         className="pedido-card-crema"
                                         onClick={() => {
+                                            // if (linea.tieneRegistros !== false) {
+                                            //     setSelectedLinea({ ...linea, CodigoProducto: header.CodProdPedido || header.CodProdFinal || '' });
+                                            //     setShowPesajeModal(true);
+                                            // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                             if (linea.tieneRegistros !== false) {
-                                                setSelectedLinea({ ...linea, CodigoProducto: header.CodProdPedido || header.CodProdFinal || '' });
+                                                setSelectedLinea({
+                                                    ...linea,
+                                                    CodigoProducto: header.CodProdPedido || header.CodProdFinal || '',
+                                                    // ✅✅ NUEVO: cliente y cod. cliente para la etiqueta
+                                                    Clientes: linea.Clientes || header.Clientes || '',
+                                                    CodCliente: linea.CodCliente || header.CodCliente || '',
+                                                    NumeroExterno: linea.NoDoc || '',
+                                                    NotaVenta: linea.NumeroPedido || '',
+
+
+
+
+
+
+
+
+
+                                                    
+                                                    // ✅✅ FICHA DEL SALIENTE (VB BuscoFichaTecnica) → etiqueta
+                                                    Espesor: (header.fichaSaliente?.Espesor !== undefined && header.fichaSaliente.Espesor !== '') ? header.fichaSaliente.Espesor : linea.Espesor,
+                                                    Ancho: header.fichaSaliente?.Ancho || linea.Ancho || '',
+                                                    Largo: header.fichaSaliente?.Largo || '0.0',
+                                                    Material: header.fichaSaliente?.Material || '',
+                                                    Aleacion: header.fichaSaliente?.Aleacion || '',
+                                                    Temple: header.fichaSaliente?.Temple || '',
+                                                    Terminacion: header.fichaSaliente?.Terminacion || '',
+                                                    Calidad: header.fichaSaliente?.Calidad || linea.Calidad || '',
+                                                    Recubrimiento: header.fichaSaliente?.Recubrimiento || linea.Recubrimiento || ''
+                                                });
                                                 setShowPesajeModal(true);
                                             }
+
+
+
+
+
                                         }}
                                         style={{ cursor: linea.tieneRegistros !== false ? 'pointer' : 'default' }}
                                     >

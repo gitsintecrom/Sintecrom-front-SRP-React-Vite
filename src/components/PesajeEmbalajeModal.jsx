@@ -3283,6 +3283,7 @@ import Swal from 'sweetalert2';
 import './PesajeEmbalajeModal.css';
 import AjustePesoModal from './AjustePesoModal';
 import CalidadModal from '../components/modals/CalidadModal';
+import logoUrl from '../assets/Logo1.jpg';
 
 const PesajeEmbalajeModal = ({ lineaData, operacionId, onClose, onSuccess }) => {
     // === ESTADOS DE DATOS ===
@@ -3332,7 +3333,7 @@ const PesajeEmbalajeModal = ({ lineaData, operacionId, onClose, onSuccess }) => 
         const interval = setInterval(async () => {
             if (isManualEdit) return;
             try {
-                const res = await axiosInstance.get(`${agenteUrl}/peso`);
+                const res = await axiosInstance.get(`${agenteUrl}/peso/2`);
                 setPeso(Math.round(parseFloat(res.data.peso) || 0));
             } catch {
                 // Balanza no disponible
@@ -3385,6 +3386,9 @@ const PesajeEmbalajeModal = ({ lineaData, operacionId, onClose, onSuccess }) => 
                     fechaReg: item.FechaReg
                 };
             });
+
+            console.log("paquetes........:", paquetesData);
+            
 
             setPaquetes(paquetesData);
 
@@ -3617,196 +3621,6 @@ const PesajeEmbalajeModal = ({ lineaData, operacionId, onClose, onSuccess }) => 
         }
     };
 
-    // const handleRegistrar = async () => {
-    //     if (paquetes.length === 0) return Swal.fire('Advertencia', 'No hay paquetes para registrar.', 'warning');
-
-    //     try {
-    //         const idParaRegistro = lineaData?.Operacion_ID || operacionId;
-    //         const guidRegistro = obtenerGuidParaConsulta();
-
-    //         let usuarioLogueado = 'pmorrone';
-    //         const userStorage = localStorage.getItem('user') || localStorage.getItem('usuario');
-    //         if (userStorage) {
-    //             try {
-    //                 const userData = typeof userStorage === 'string' ? JSON.parse(userStorage) : userStorage;
-    //                 usuarioLogueado = userData.nombre || userData.username || userData.user || userData.email || 'pmorrone';
-    //             } catch (err) {
-    //                 usuarioLogueado = typeof userStorage === 'string' ? userStorage : 'pmorrone';
-    //             }
-    //         }
-
-    //         // ✅✅ 1) Junta los defectos de cada paquete de calidad:
-    //         //    - los de esta sesión (defectosPorLoteRef), o
-    //         //    - los pendientes que ya estaban en la BD (para no perderlos al re-registrar).
-    //         const paquetesCalidad = paquetes.filter(p => p.esCalidad || (p.calidadTexto || '').trim() === 'Calidad');
-    //         let defectosItemBD = null;
-    //         for (const p of paquetesCalidad) {
-    //             if (defectosPorLoteRef.current[p.idLotePlancha]) continue;
-    //             if (defectosItemBD === null) {
-    //                 try {
-    //                     const res = await axiosInstance.post('/registracion/calidad/obtener', {
-    //                         operacionId: idParaRegistro,
-    //                         itemPedidoId: itemPedidoId,
-    //                         numeroItem: parseInt(numeroItem) || 0,
-    //                         sobrante: 0,
-    //                         idLotePlancha: p.idLotePlancha,
-    //                     });
-    //                     const regs = Array.isArray(res.data) ? res.data : [];
-    //                     defectosItemBD = regs
-    //                         .filter(r => parseInt(r.Dictamen) === 0)
-    //                         .map(r => ({
-    //                             codDefecto: r.Codigo,
-    //                             codGravedad: String(r.Gravedad),
-    //                             codUbicacion: String(r.Ubicacion),
-    //                             nota: r.Nota || ''
-    //                         }));
-    //                 } catch (e) {
-    //                     defectosItemBD = [];
-    //                 }
-    //             }
-    //             defectosPorLoteRef.current[p.idLotePlancha] = defectosItemBD;
-    //             defectosItemBD = [];
-    //         }
-
-    //         // ✅✅ 2) Registro de paquetes (igual que antes)
-    //         const dataToSend = {
-    //             operacionId: idParaRegistro,
-    //             itemPedidoId: guidRegistro,
-    //             loteIds: guidRegistro,
-    //             sobrante: sobranteParam,
-    //             atados: paquetes.map(p => ({
-    //                 atado: p.numeroPaquete,
-    //                 rollos: p.hojas,
-    //                 peso: p.peso,
-    //                 kilosBruto: p.kilosBruto,
-    //                 tara: p.tara,
-    //                 esCalidad: p.esCalidad,
-    //                 nroEtiqueta: p.nroEtiqueta,
-    //                 idLotePlancha: p.idLotePlancha,
-    //                 serieLote: p.serieLote
-    //             })),
-    //             lineaData,
-    //             usuario: usuarioLogueado
-    //         };
-
-    //         await axiosInstance.post('/registracion/pesaje/registrar-paquetes-emabalaje', dataToSend);
-
-    //         // ✅✅ 3) ORDEN VB: los defectos se graban DESPUÉS del registro del paquete.
-    //         //    Así CalidadFinal queda apoyada sobre un registro existente y
-    //         //    SP_TraerOperacionesCalidad la encuentra (como cuando registrás desde el VB).
-    //         for (const p of paquetesCalidad) {
-    //             const defs = defectosPorLoteRef.current[p.idLotePlancha] || [];
-    //             if (defs.length === 0) continue;
-    //             try {
-    //                 await axiosInstance.post('/registracion/calidad/guardar-lote', {
-    //                     operacionId: idParaRegistro,
-    //                     itemPedidoId: itemPedidoId,
-    //                     numeroItem: parseInt(numeroItem) || 0,
-    //                     sobrante: 0,
-    //                     idLotePlancha: p.idLotePlancha,
-    //                     serieLote: p.serieLote,
-    //                     codigoProducto: lineaData?.CodigoProducto || lineaData?.CodProdPedido || '',
-    //                     numeroPedido: numeroPedido,
-    //                     origenLoteId: lineaData?.Origen_Lote_ID || '',
-    //                     defectos: defs,
-    //                     usuario: usuarioLogueado,
-    //                 });
-    //             } catch (e) {
-    //                 console.error('❌ Error re-guardando defectos post-registro:', e);
-    //             }
-    //         }
-
-    //         Swal.fire('Éxito', 'Paquetes registrados correctamente.', 'success');
-    //         onSuccess();
-    //         onClose();
-    //     } catch (err) {
-    //         console.error("❌ Error al registrar:", err);
-    //         Swal.fire('Error', err.response?.data?.error || 'Error al registrar.', 'error');
-    //     }
-    // };
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // const handleRegistrar = async () => {
-    //     if (paquetes.length === 0) return Swal.fire('Advertencia', 'No hay paquetes para registrar.', 'warning');
-
-    //     try {
-    //         const idParaRegistro = lineaData?.Operacion_ID || operacionId;
-    //         const guidRegistro = obtenerGuidParaConsulta();
-
-    //         let usuarioLogueado = 'pmorrone';
-    //         const userStorage = localStorage.getItem('user') || localStorage.getItem('usuario');
-    //         if (userStorage) {
-    //             try {
-    //                 const userData = typeof userStorage === 'string' ? JSON.parse(userStorage) : userStorage;
-    //                 usuarioLogueado = userData.nombre || userData.username || userData.user || userData.email || 'pmorrone';
-    //             } catch (err) {
-    //                 usuarioLogueado = typeof userStorage === 'string' ? userStorage : 'pmorrone';
-    //             }
-    //         }
-
-    //         const dataToSend = {
-    //             operacionId: idParaRegistro,
-    //             itemPedidoId: guidRegistro,
-    //             loteIds: guidRegistro,
-    //             sobrante: sobranteParam,
-    //             atados: paquetes.map(p => ({
-    //                 atado: p.numeroPaquete,
-    //                 rollos: p.hojas,
-    //                 peso: p.peso,
-    //                 kilosBruto: p.kilosBruto,
-    //                 tara: p.tara,
-    //                 esCalidad: p.esCalidad,
-    //                 nroEtiqueta: p.nroEtiqueta,
-    //                 idLotePlancha: p.idLotePlancha,
-    //                 serieLote: p.serieLote
-    //             })),
-    //             lineaData,
-    //             usuario: usuarioLogueado
-    //         };
-
-    //         await axiosInstance.post('/registracion/pesaje/registrar-paquetes-emabalaje', dataToSend);
-    //         Swal.fire('Éxito', 'Paquetes registrados correctamente.', 'success');
-    //         onSuccess();
-    //         onClose();
-    //     } catch (err) {
-    //         console.error("❌ Error al registrar:", err);
-    //         Swal.fire('Error', err.response?.data?.error || 'Error al registrar.', 'error');
-    //     }
-    // };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     const handleRegistrar = async () => {
         if (paquetes.length === 0) return Swal.fire('Advertencia', 'No hay paquetes para registrar.', 'warning');
 
@@ -3884,23 +3698,6 @@ const PesajeEmbalajeModal = ({ lineaData, operacionId, onClose, onSuccess }) => 
         }
     };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
     const handleReset = async () => {
         const confirm = await Swal.fire({
             title: '¿Resetear todo?',
@@ -3938,72 +3735,7 @@ const PesajeEmbalajeModal = ({ lineaData, operacionId, onClose, onSuccess }) => 
         }
     };
 
-    // const handleEliminarPaquete = async (paqueteAEliminar, index) => {
-    //     const confirm = await Swal.fire({
-    //         title: '¿Eliminar paquete?',
-    //         text: `Se eliminará el paquete ${paqueteAEliminar.numeroPaquete} de ${paqueteAEliminar.peso.toFixed(2)} Kg`,
-    //         icon: 'warning', showCancelButton: true
-    //     });
-    //     if (!confirm.isConfirmed) return;
-
-    //     // ✅ Si es un paquete de calidad, eliminar también sus defectos de la BD
-    //     if (paqueteAEliminar.esCalidad && paqueteAEliminar.idLotePlancha) {
-    //         try {
-    //             await axiosInstance.post('/registracion/calidad/eliminar-por-lote', {
-    //                 operacionId: lineaData?.Operacion_ID || operacionId,
-    //                 itemPedidoId: itemPedidoId,
-    //                 numeroItem: parseInt(numeroItem) || 0,
-    //                 sobrante: sobranteParam,
-    //                 idLotePlancha: paqueteAEliminar.idLotePlancha
-    //             });
-    //         } catch (err) {
-    //             console.error('Error eliminando defectos de calidad:', err);
-    //         }
-    //         delete defectosPorLoteRef.current[paqueteAEliminar.idLotePlancha];
-    //     }
-
-    //     if (paqueteAEliminar.idLotePlancha) {
-    //         deletedLotesRef.current.add(paqueteAEliminar.idLotePlancha);
-    //     }
-
-    //     setPaquetes(prev => prev.filter((_, i) => i !== index).map((p, i) => ({ ...p, numeroPaquete: i + 1 })));
-    //     if (paqueteAEliminar.esCalidad) setCalidadTotal(prev => prev - paqueteAEliminar.peso);
-    //     else setSobreOrdenTotal(prev => prev - paqueteAEliminar.peso);
-    //     setNumeroPaquete(prev => Math.max(1, prev - 1));
-    // };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // ✅✅ ELIMINAR = VB ResetearPaquete: borra registro, atados, libera lote y defectos EN LA BD
+    // ✅✅ ELIMINAR = VB ResetearPaquete: borra registro, atados, libera lote y defectos EN LA BD
     const handleEliminarPaquete = async (paqueteAEliminar, index) => {
         const confirm = await Swal.fire({
             title: '¿Eliminar paquete?',
@@ -4072,8 +3804,24 @@ const PesajeEmbalajeModal = ({ lineaData, operacionId, onClose, onSuccess }) => 
                 parHora: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }),
                 parNumeroExterno: lineaData?.NumeroExterno || lineaData?.NoDoc || '',
                 parNotaVenta: lineaData?.NotaVenta || lineaData?.NumeroPedido || '',
-                parCodCliente: lineaData?.CodCliente || String(lineaData?.CodProdPedido || '').substring(0, 4),
+                // parCodCliente: lineaData?.CodCliente || String(lineaData?.CodProdPedido || '').substring(0, 4),
+                // parCliente: lineaData?.Clientes || lineaData?.ClientePedido || '',
+
+
+
+
+
+
+
+
+                parCodCliente: lineaData?.CodCliente || '',          // ✅ antes: substring(0,4) del CodProdPedido
                 parCliente: lineaData?.Clientes || lineaData?.ClientePedido || '',
+
+
+
+
+
+
                 parEspesor: isNaN(espesorNum) ? String(lineaData?.Espesor || '0.000') : espesorNum.toFixed(3),
                 parAncho: String(lineaData?.Ancho || ''),
                 parLargo: String(lineaData?.Largo || '0.0'),
@@ -4085,7 +3833,7 @@ const PesajeEmbalajeModal = ({ lineaData, operacionId, onClose, onSuccess }) => 
                 parTerminacion: lineaData?.Terminacion || 'NA - NA',
                 parCalidad: lineaData?.Calidad || '01 -',
                 parPaquete: String(paquete.numeroPaquete),
-                parParecer: '',
+                parParecer: (paquete.calidadTexto || '').trim(),   // ✅✅ DICTAMEN: '' | 'Calidad' | 'Aceptada' | 'Rechazada' (como VB)
                 parLiquido: String(neto),
                 parBruto: String(bruto),
                 parTara: String(tara),
@@ -4098,7 +3846,7 @@ const PesajeEmbalajeModal = ({ lineaData, operacionId, onClose, onSuccess }) => 
                 <div class="etiqueta-container">
                     <div class="header-contenedor">
                         <div class="logo-y-serie">
-                            <img src="/Logo1.jpg" alt="Logo Sintecrom" class="logo">
+                            <img src="${logoUrl}" alt="Logo Sintecrom" class="logo">
                             <span class="serie-lote">${labelData.parSerieLote}</span>
                         </div>
                     </div>
@@ -4167,7 +3915,7 @@ const PesajeEmbalajeModal = ({ lineaData, operacionId, onClose, onSuccess }) => 
                     .header-contenedor { border: 1pt solid black; padding: 0.05cm 0.1cm; margin-bottom: 0.05cm; display: flex; align-items: center; height: 1.2cm; }
                     .logo-y-serie { display: flex; align-items: center; width: 100%; }
                     .logo { height: 0.8cm; width: auto; margin-right: 0.2cm; flex-shrink: 0; }
-                    .logo-y-serie > span { font-size: 32pt; font-weight: bold; text-align: center; flex-grow: 1; line-height: 1; }
+                    .logo-y-serie > span { font-size: 18pt; font-weight: bold; text-align: center; flex-grow: 1; line-height: 1; }
                     .tabla-top {
                         display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: repeat(4, auto);
                         border: 1pt solid black; background: white; margin-bottom: 0.05cm; width: 100%; height: 4cm;
@@ -4192,7 +3940,7 @@ const PesajeEmbalajeModal = ({ lineaData, operacionId, onClose, onSuccess }) => 
                     .ancho-v { grid-column: 2; grid-row: 4; }
                     .largo-v { grid-column: 3; grid-row: 4; }
                     .cob-v { grid-column: 4; grid-row: 4; }
-                    .codigo-completo { grid-column: 5 / 8; grid-row: 3 / 5; font-size: 8px; padding: 2px 4px; text-align: left; background: #f8f8f8; border: 1pt solid black; }
+                    .codigo-completo { grid-column: 5 / 8; grid-row: 3 / 5; font-size: 12px; padding: 2px 4px; text-align: left; background: #f8f8f8; border: 1pt solid black; }
                     .tabla { width: 100%; border-collapse: collapse; margin-bottom: 0.05cm; table-layout: fixed; border: 1pt solid black; height: 1.9cm; }
                     .tabla th, .tabla td { border: 1pt solid black; padding: 0.03cm; text-align: center; vertical-align: middle; font-size: 7pt; font-weight: normal; }
                     .tabla th { background-color: #f0f0f0; }

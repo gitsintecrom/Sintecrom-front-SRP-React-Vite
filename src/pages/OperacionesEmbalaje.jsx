@@ -4050,18 +4050,45 @@ const OperacionesEmbalaje = () => {
                 pesadaInput.addEventListener('blur', () => { setTimeout(() => { isManualEdit = false; }, 2000); });
 
                 // ✅ POLLING al agente de balanza (puerto COM)
+                // pollingInterval = setInterval(async () => {
+                //     if (isManualEdit) return;
+                //     try {
+                //         const response = await axios.get(`${agenteUrl}/peso`);
+                //         if (response.data?.success && pesadaInput) {
+                //             if (document.activeElement !== pesadaInput && !pesadaInput.value) {
+                //                 pesadaInput.value = response.data.peso;
+                //                 updateHint();
+                //             }
+                //         }
+                //     } catch (error) { /* balanza sin conexión */ }
+                // }, 1200);
+
+
+
+
+
+
+
+
                 pollingInterval = setInterval(async () => {
-                    if (isManualEdit) return;
-                    try {
-                        const response = await axios.get(`${agenteUrl}/peso`);
-                        if (response.data?.success && pesadaInput) {
-                            if (document.activeElement !== pesadaInput && !pesadaInput.value) {
-                                pesadaInput.value = response.data.peso;
-                                updateHint();
-                            }
-                        }
-                    } catch (error) { /* balanza sin conexión */ }
-                }, 1200);
+                // ✅✅ ESCUCHA CONTINUA: cada 2 segundos refresca el input con la
+                //    lectura viva de la balanza, salvo que el usuario esté escribiendo
+                //    a mano o tenga el foco puesto en el campo.
+                if (isManualEdit) return;
+                if (document.activeElement === pesadaInput) return;
+                try {
+                    const response = await axios.get(agenteUrl + '/peso/2');
+                    if (response.data && response.data.success && pesadaInput) {
+                    const pesoLive = parseFloat(String(response.data.peso).replace(',', '.'));
+                    if (!isNaN(pesoLive)) {
+                        pesadaInput.value = response.data.peso;   // ✅ SIEMPRE pisa con la lectura nueva (antes solo si estaba vacío)
+                        updateHint();
+                    }
+                    }
+                } catch (error) {
+                    // Silenciar errores de conexión
+                }
+                }, 2000);   // ✅ cada 2 segundos
 
                 document.getElementById('btn-limpiar-ultimo')?.addEventListener('click', () => {
                     if (pesadasAcumuladas.length > 0) { pesadasAcumuladas.pop(); updateTotalDisplay(); }
